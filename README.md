@@ -45,3 +45,18 @@ eslint 会和 prettier 冲突，所以安装`npm i eslint-config-prettier - D`
 `echo "module.exports = { extends: ['@commitlint/config-conventional'] }"> commitlint.config.js`
 
 `npx husky add .husky/commit-msg 'npx --no-install commitlint --edit "$1"'`
+
+### 配置 Commitizen
+
+`npm install commitizen -D`
+
+`npx commitizen init cz-conventional-changelog --save-dev --save-exact`
+
+### 完善脚本
+
+package.json 里面添加脚本 "commit":"cz"
+以后不用运行 npx cz，也不是运行 `git commit`，而是直接运行 你 `npm run commit`
+
+package.json 里面添加脚本 "push":"git push origin"
+
+### 上传 github
