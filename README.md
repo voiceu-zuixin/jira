@@ -35,3 +35,13 @@ eslint 在脚手架搭建项目的时候就自动配置了初步的，所以不�
 eslint 会和 prettier 冲突，所以安装`npm i eslint-config-prettier - D`
 
 然后在 package.json 里面的 eslint 配置项中添加"prettier"
+
+### 配置 commitlint
+
+官网 https://typicode.github.io/husky/#/
+
+`npm i @commitlint/config-conventional @commitlint/cli -D`
+
+`echo "module.exports = { extends: ['@commitlint/config-conventional'] }"> commitlint.config.js`
+
+`npx husky add .husky/commit-msg 'npx --no-install commitlint --edit "$1"'`
