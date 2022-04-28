@@ -1,5 +1,7 @@
 {
   "compilerOptions": {
+    // 后续的代码，可以不用../../这样去找相对路径，把./src当做根路径
+    "baseUrl": "./src",
     "target": "es5",
     "lib": [
       "dom",
