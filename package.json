@@ -8,7 +8,10 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "prepare": "husky install",
-    "commit":"cz"
+    "commit": "cz",
+    "push":"git push",
+    "json-server": "json-server __json_server_mock__/db.json --watch"
+
   },
   "eslintConfig": {
     "extends": [
@@ -52,6 +55,7 @@
     "commitizen": "^4.2.4",
     "cz-conventional-changelog": "^3.3.0",
     "husky": "^7.0.4",
+    "json-server": "^0.17.0",
     "lint-staged": "^12.4.1",
     "prettier": "^2.6.2"
   },

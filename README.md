@@ -57,7 +57,7 @@ eslint 会和 prettier 冲突，所以安装`npm i eslint-config-prettier - D`
 package.json 里面添加脚本 "commit":"cz"
 以后不用运行 npx cz，也不是运行 `git commit`，而是直接运行 你 `npm run commit`或者`yarn commit`
 
-package.json 里面添加脚本 "push":"git push"
+package.json 里面添加脚本 `"push":"git push"`
 
 ### 上传 github
 
@@ -75,3 +75,13 @@ package.json 里面添加脚本 "push":"git push"
 即第二次 使用 `git push` 等同于执行 `git push origin master`。
 
 `git push` 的一般形式为 `git push <远程主机名> <本地分支名> : <远程分支名>`
+
+## Mock 接口
+
+安装`npm i json-server -D`
+
+根目录新建文件夹`__json_server_mock__` 前后两个\_\_表示跟项目代码没有多大关系，是辅助工具，在里面新建`db.json`文件
+
+然后在 package.json 里面的脚本中添加 `"json-server":"json-server __json_server_mock__/db.json --watch"`
+
+后续启动`yarn json-server`即可
