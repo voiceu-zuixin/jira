@@ -10,7 +10,7 @@
     "prepare": "husky install",
     "commit": "cz",
     "push":"git push",
-    "json-server": "json-server __json_server_mock__/db.json --watch"
+    "json-server": "json-server __json_server_mock__/db.json --watch --port 3001"
 
   },
   "eslintConfig": {

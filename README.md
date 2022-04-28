@@ -82,6 +82,18 @@ package.json 里面添加脚本 `"push":"git push"`
 
 根目录新建文件夹`__json_server_mock__` 前后两个\_\_表示跟项目代码没有多大关系，是辅助工具，在里面新建`db.json`文件
 
-然后在 package.json 里面的脚本中添加 `"json-server":"json-server __json_server_mock__/db.json --watch"`
+然后在 package.json 里面的脚本中添加 `"json-server":"json-server __json_server_mock__/db.json --watch --port 3001"` 防止和 react 项目启动的端口冲突
 
 后续启动`yarn json-server`即可
+
+这样的目的是在没有后端接口来的时候，先自己造数据，测试自己的前端代码是否能够正常运行
+
+所以会出现一种问题，比如在`fetch('xxx')`这个 url 的时候，所有代码已经写了很多个请求了，后面后端接口来了，再去挨个改就很麻烦，做法不成熟
+
+所以根目录新建 `.env`、`.env.development`文件，把`REACT_APP_API_URL`这一类需要统一改变的变量提取到这种环境文件里
+
+通过`const apiUrl = process.env.REACT_APP_API_URL`的方式，可以将其引入，这个时候不用管`.env`还是`.env.development`，统统写成`process.env`就行
+
+在`npm run start` 的时候，`webpack`会去读取`.env.development`中的变量
+
+在`npm run build` 的时候，`webpack`会去读取`.env`中的变量
