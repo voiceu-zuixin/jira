@@ -55,8 +55,23 @@ eslint 会和 prettier 冲突，所以安装`npm i eslint-config-prettier - D`
 ### 完善脚本
 
 package.json 里面添加脚本 "commit":"cz"
-以后不用运行 npx cz，也不是运行 `git commit`，而是直接运行 你 `npm run commit`
+以后不用运行 npx cz，也不是运行 `git commit`，而是直接运行 你 `npm run commit`或者`yarn commit`
 
-package.json 里面添加脚本 "push":"git push origin"
+package.json 里面添加脚本 "push":"git push"
 
 ### 上传 github
+
+新建仓库，但是什么都不要在里面生成，比如证件之类的，不然主分支就会是 main，就又得改，
+然后直接添加远程主机名
+
+`git remote add origin git@github.com:voiceu-zuixin/jira.git`
+
+`git push -u origin master`就行了，第一次用了 `-u`的话，以后拉取代码`pull`或者`push`就可以简写，`-u` 是 `upstream` 的意思
+
+就是你第一次使用 `git push -u origin master` 之后，
+第二次【下次，以后】可以直接使用 `git pull` 拉取代码，就不需要输入完整的命令 `git pull origin master` 来拉取代码了。
+即 第二次 使用 `git pull` 等同于执行 `git pull origin master`。
+然后第二次也可以用 `git push`推送代码而不用`git push origin master`。
+即第二次 使用 `git push` 等同于执行 `git push origin master`。
+
+`git push` 的一般形式为 `git push <远程主机名> <本地分支名> : <远程分支名>`
