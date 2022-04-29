@@ -80,6 +80,8 @@ package.json 里面添加脚本 `"push":"git push"`
 
 安装`npm i json-server -D`
 
+`json-server`是不需要担心跨域问题的，包内部已经做了处理
+
 根目录新建文件夹`__json_server_mock__` 前后两个\_\_表示跟项目代码没有多大关系，是辅助工具，在里面新建`db.json`文件
 
 然后在 package.json 里面的脚本中添加 `"json-server":"json-server __json_server_mock__/db.json --watch --port 3001"` 防止和 react 项目启动的端口冲突

@@ -1,3 +1,5 @@
+import { useEffect } from 'react'
+
 // 判断是0还是undefined或者null，只有后两者才是真的false
 export const isFalsy = (value) => (value === 0 ? false : !value)
 
@@ -16,4 +18,13 @@ export const cleanObject = (object) => {
     }
   })
   return result
+}
+
+// 自定义一个CommonentDidMount生命周期钩子的hook，useMount
+// 目的是看到useEffect充当只在第一次渲染的时候执行的情况下，有空数组看着不好
+// hook必须要以use开头
+export const useMount = (callback) => {
+  useEffect(() => {
+    callback()
+  }, [])
 }
