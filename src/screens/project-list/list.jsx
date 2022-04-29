@@ -14,7 +14,10 @@ export const List = ({ list, users }) => {
           <tr key={project.id}>
             <td>{project.name}</td>
             {/* ?. 有点类似三元运算符 */}
-            <td>{users.find((user) => user.id === project.personId)?.name || '未知'}</td>
+            <td>
+              {users.find((user) => user.id === project.personId)?.name ||
+                '未知'}
+            </td>
           </tr>
         ))}
       </tbody>

@@ -2,6 +2,8 @@
 import { List } from './list'
 import { SearchPanel } from './search-panel'
 import { useState, useEffect } from 'react'
+import { cleanObject } from 'utils'
+import qs from 'qs'
 
 // 引入apiUrl
 const apiUrl = process.env.REACT_APP_API_URL
@@ -17,7 +19,11 @@ export const ProjectListScreen = () => {
   useEffect(() => {
     // then里的函数会异步执行，所以添加async，变成同步
     // fetch()得到一个确定的resolve或者reject结果response后，才会进入then
-    fetch(`${apiUrl}/projects`).then(async (response) => {
+    // `${apiUrl}/projects?name=${param.name}&personId=${param.personId}`太麻烦，可以用qs的包来完成
+
+    fetch(
+      `${apiUrl}/projects?${qs.stringify(cleanObject(param))}`
+    ).then(async (response) => {
       if (response.ok) {
         // 异步函数，会等待await后方的函数执行完毕后，再继续往下执行
         // 此处就是等待，但是我认为这里不写await也行，因为进入then的时候response应该已经确定了
