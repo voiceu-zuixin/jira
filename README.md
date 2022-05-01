@@ -99,3 +99,31 @@ package.json 里面添加脚本 `"push":"git push"`
 在`npm run start` 的时候，`webpack`会去读取`.env.development`中的变量
 
 在`npm run build` 的时候，`webpack`会去读取`.env`中的变量
+
+## 遇到的一个问题，初次渲染会 render2 次，hooks 也会被多次调用
+
+17 的版本都不会，查阅了很多资料，还以为是 bug，去 react18 提 issue，回复我说是 18 的新特性
+
+issue 地址（已经被关闭）：https://github.com/facebook/react/issues/24467
+
+资料 1：https://reactjs.org/blog/2022/03/08/react-18-upgrade-guide.html#updates-to-strict-mode
+
+资料 2：https://github.com/reactwg/react-18/discussions/19
+
+资料 3：https://github.com/reactwg/react-18/discussions/18
+
+资料 4.1：https://zh-hans.reactjs.org/docs/strict-mode.html#gatsby-focus-wrapper
+
+资料 4.2（资料 1 的中文文档片段）：https://zh-hans.reactjs.org/docs/strict-mode.html#ensuring-reusable-state
+
+资料 5（问题原因所在）：https://zh-hans.reactjs.org/docs/strict-mode.html#detecting-unexpected-side-effects
+
+总的来说，是入口文件`index.tsx`的`<React.StrictMode>`导致，新特性在资料 5 中提到如下：
+
+严格模式不能自动检测到你的副作用，但它可以帮助你发现它们，使它们更具确定性。通过故意重复调用以下函数来实现的该操作：
+
+- class 组件的 constructor，render 以及 shouldComponentUpdate 方法
+- class 组件的生命周期方法 getDerivedStateFromProps
+- **函数组件体** （所以正是因为这条，才导致的）
+- 状态更新函数 (即 setState 的第一个参数）
+- 函数组件通过使用 useState，useMemo 或者 useReducer
