@@ -2,8 +2,8 @@
 import './App.css'
 // import { ProjectListScreen } from 'test-screens/project-list'
 import { ProjectListScreen } from 'screens/project-list'
-import { Test } from 'test/test'
-import TestClass from 'test/test-class'
+// import { Test } from 'test/test'
+// import TestClass from 'test/test-class'
 // import { useEffect } from 'react'
 
 function App() {
@@ -13,9 +13,9 @@ function App() {
   // }, [])
   return (
     <div className="App">
-      {/* <ProjectListScreen /> */}
+      <ProjectListScreen />
       {/* <Test /> */}
-      <TestClass />
+      {/* <TestClass /> */}
       <code> '.env':{process.env.REACT_APP_API_URL}</code>
     </div>
   )

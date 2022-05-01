@@ -1,7 +1,7 @@
 import { List } from './list'
 import { SearchPanel } from './search-panel'
 import { useState, useEffect } from 'react'
-import { cleanObject, useMount } from 'utils'
+import { cleanObject, useMount ,useDebounce} from 'utils'
 import qs from 'qs'
 
 // 引入apiUrl
@@ -15,8 +15,11 @@ export const ProjectListScreen = () => {
   })
   const [list, setList] = useState([])
   const [users, setUsers] = useState([])
-  console.log(param)
-  console.log('project')
+  // 不要在函数式组件体内部写直接运行的函数，除了hook
+  // console.log(param)
+
+
+  const debouncedParam = useDebounce(param,2000)
 
   // 为什么初次渲染的时候会请求两次呢，初步排查是react18的原因，同样的代码在17里面不会
   // 所以看看issue，要不然就只能这样，或者降低版本，但是这个是脚手架搭建的，所以看看怎么重新弄一个低版本的
@@ -28,7 +31,7 @@ export const ProjectListScreen = () => {
     // `${apiUrl}/projects?name=${param.name}&personId=${param.personId}`太麻烦，可以用qs的包来完成
 
     // fetch(`${apiUrl}/projects?name=${param.name}&personId=${param.personId}`).then(
-    fetch(`${apiUrl}/projects?${qs.stringify(cleanObject(param))}`).then(
+    fetch(`${apiUrl}/projects?${qs.stringify(cleanObject(debouncedParam))}`).then(
       async (response) => {
         if (response.ok) {
           // 异步函数，会等待await后方的函数执行完毕后，再继续往下执行
@@ -48,7 +51,7 @@ export const ProjectListScreen = () => {
         }
       }
     )
-  }, [param])
+  }, [debouncedParam])
   // 初次渲染的时候把users也请求下来
   // useEffect(() => {
   //   // then里的函数会异步执行，所以添加async，变成同步
@@ -77,6 +80,7 @@ export const ProjectListScreen = () => {
       }
     })
   }) //不用空数组也可以只在首次渲染的时候执行该函数
+
 
   return (
     <div>

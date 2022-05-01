@@ -131,3 +131,17 @@ issue 地址（已经被关闭）：https://github.com/facebook/react/issues/244
 以上总结了为何要 render 两次的原因，具体记录在博客帖子里，链接如下，
 
 https://juejin.cn/post/7092696529105846303
+
+尽量不要在函数式组件里写直接运行的函数逻辑，最好是定义函数 xxx=()=>{}，而不是写 xxx()
+
+useEffect，空数组的时候会报警告，配置下面的到 eslintConfig
+
+```
+    "rules": {
+      "react-hooks/exhaustive-deps": "warn"
+    }
+```
+
+# custom hook 与 普通函数的区别
+
+自定义 hook 的内部有 hook，是其和普通函数的区别，比如 useDebounce，内部需要 useState 和 useEffect 来确定最终的 value

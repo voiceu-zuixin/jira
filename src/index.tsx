@@ -16,9 +16,12 @@ import reportWebVitals from './reportWebVitals'
 import ReactDOM from 'react-dom/client'
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 root.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
+  // 不用这个严格模式吧，之前的代码都是直接包裹路由，也没用严格模式
+  // react 17的时候严格模式不会render2遍，react 18会
+  <App />
+  // <React.StrictMode>
+  //   <App />
+  // </React.StrictMode>
 )
 
 // 这样，用之前的形式才不会有两次渲染请求或者说hooks两次调用，但是这样会有警告
