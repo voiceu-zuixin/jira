@@ -126,4 +126,8 @@ issue 地址（已经被关闭）：https://github.com/facebook/react/issues/244
 - class 组件的生命周期方法 getDerivedStateFromProps
 - **函数组件体** （所以正是因为这条，才导致的）
 - 状态更新函数 (即 setState 的第一个参数）
-- 函数组件通过使用 useState，useMemo 或者 useReducer
+- 函数组件通过使用 **useState**，useMemo 或者 useReducer
+
+以上总结了为何要 render 两次的原因，具体记录在博客帖子里，链接如下，
+
+https://juejin.cn/post/7092696529105846303

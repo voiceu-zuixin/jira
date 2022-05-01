@@ -7,6 +7,7 @@ import qs from 'qs'
 // 引入apiUrl
 const apiUrl = process.env.REACT_APP_API_URL
 
+// 开发模式下函数体是会多次调用的，而且次数是不确定的，hooks的初次渲染调用次数是两次
 export const ProjectListScreen = () => {
   const [param, setParam] = useState({
     name: '',
@@ -15,6 +16,7 @@ export const ProjectListScreen = () => {
   const [list, setList] = useState([])
   const [users, setUsers] = useState([])
   console.log(param)
+  console.log('project')
 
   // 为什么初次渲染的时候会请求两次呢，初步排查是react18的原因，同样的代码在17里面不会
   // 所以看看issue，要不然就只能这样，或者降低版本，但是这个是脚手架搭建的，所以看看怎么重新弄一个低版本的
@@ -34,7 +36,15 @@ export const ProjectListScreen = () => {
           // pending的话进不去后面的，事实证明不是这样的，
           // 跟普通promise不同，response对象是一个Response 对象，其中Response.json()方法会返回一个Promise对象
           //等待response.json()，该函数返回的是一个Promise对象，随后更新list
-          setList(await response.json())
+          let res = await response.json()
+          console.log('res', res)
+          // setList 会导致多次调用整个函数式组件体，，相对于componentWillUpdate的生命周期，又会重新渲染
+          // 然后每次调用setList又会重新渲染，又走两次函数组件体，挂载一次卸载一次又挂载一次
+          // 但是这次useEffect这些hook就不一定会被调用，因为数组里的param没变
+          // 经过测试，大多数情况下重复调用2次，但是也有其他次数的时候
+          // 所以次数不受控，不知道会重复调用多少次
+          setList(res)
+          // setList(await response.json())
         }
       }
     )
