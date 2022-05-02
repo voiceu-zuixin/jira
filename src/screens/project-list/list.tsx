@@ -24,6 +24,7 @@ export const List = ({ list, users }: ListProps) => {
         </tr>
       </thead>
       <tbody>
+        {/* 根据list和user来渲染页面 */}
         {list.map((project) => (
           <tr key={project.id}>
             <td>{project.name}</td>

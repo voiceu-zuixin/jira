@@ -9,7 +9,8 @@ const apiUrl = process.env.REACT_APP_API_URL
 
 // 开发模式下函数体是会多次调用的，而且次数是不确定的，hooks的初次渲染调用次数是两次
 export const ProjectListScreen = () => {
-  // 初始化param，用于一开始的输入框为空白
+  // 初始化param，用于一开始的输入框为空白,在子组件里输入后,onChange会触发setParam,
+  // 并进行更新param,然后再次传给子组件,进行渲染,保留在输入框
   const [param, setParam] = useState({
     name: '',
     personId: ''
@@ -27,16 +28,19 @@ export const ProjectListScreen = () => {
       // 返回一个promise对象，response带有响应数据
       .then(async (response) => {
         if (response.ok) {
-          // 更新list数组,response.json()是一个promise有结果的对象，await后变成其结果，此处是数组
+          // 更新list数组,response.json()是一个有成功的promise对象，await后变成其结果，
+          // 此处是数组，更新过后，会传给子组件List
           setList(await response.json())
         }
       })
   }, [debouncedParam])
 
+  // 首次渲染的时候请求user，传给子组件，进行render
   // 换成自定义的useMount，减少空数组
   useMount(() => {
     fetch(`${apiUrl}/users`).then(async (response) => {
       if (response.ok) {
+        // 更新user
         setUsers(await response.json())
       }
     })
