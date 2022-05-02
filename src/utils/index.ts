@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react'
 
 // 判断是0还是undefined或者null，只有后两者才是真的false
-export const isFalsy = (value) => (value === 0 ? false : !value)
+export const isFalsy = (value: unknown) => (value === 0 ? false : !value)
 
 // 删除空属性
-export const cleanObject = (object) => {
+export const cleanObject = (object: object) => {
   // 在一个函数里，改变传入的对象本身是不好的，所以新建一个一样的对象result
   // Object.assign({},object)
   const result = { ...object }
@@ -12,8 +12,11 @@ export const cleanObject = (object) => {
   // 对result内部的所有key进行遍历，如果该key的value是undefined或者null，就删除该key
   // 但是要防范value为0的时候，所以另写一个isFalsy函数
   Object.keys(result).forEach((key) => {
+    // 还可以通过这种方式来达到ts不报错的效果
+    // @ts-ignore
     const value = result[key]
     if (isFalsy(value)) {
+      // @ts-ignore
       delete result[key]
     }
   })
@@ -23,14 +26,16 @@ export const cleanObject = (object) => {
 // 自定义一个CommonentDidMount生命周期钩子的hook，useMount
 // 目的是看到useEffect充当只在第一次渲染的时候执行的情况下，有空数组看着不好
 // hook必须要以use开头
-export const useMount = (callback) => {
+export const useMount = (callback: () => void) => {
   useEffect(() => {
     callback()
   }, [])
 }
 
+// 后面用泛型来规范返回值，不要用any，泛型相对于，先来一个占位符（形参），我不知道你到底给什么类型
+// 最后真正用的时候，爱给什么类型给什么类型
 // 定义防抖hook
-export const useDebounce = (value, delay) => {
+export const useDebounce = <V>(value: V, delay?: number) => {
   // 用useState来定义一直改变的value，变成到最后防抖后的最终value
   const [debouncedValue, setDebouncedValue] = useState(value)
 

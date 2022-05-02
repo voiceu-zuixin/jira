@@ -1,9 +1,23 @@
-// import React from 'react'
-// import { useEffect } from 'react'
-// import { useState } from 'react'
+// list组件也要用，所以还需要导出User
+export interface User {
+  id: string
+  name: string
+  email: string
+  title: string
+  organization: string
+}
+
+interface SearchPanelProps {
+  users: User[]
+  param: {
+    name: string
+    personId: string
+  }
+  setParam: (param: SearchPanelProps['param']) => void
+}
 
 // 解构拿到state
-export const SearchPanel = ({ users, param, setParam }) => {
+export const SearchPanel = ({ users, param, setParam }: SearchPanelProps) => {
   return (
     <form>
       <div>
