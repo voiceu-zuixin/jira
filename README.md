@@ -145,3 +145,19 @@ useEffect，空数组的时候会报警告，配置下面的到 eslintConfig
 # custom hook 与 普通函数的区别
 
 自定义 hook 的内部有 hook，是其和普通函数的区别，比如 useDebounce，内部需要 useState 和 useEffect 来确定最终的 value
+
+# eslint 和 ts 通过注释的方式，让其暂时忽略下方代码
+
+    //这样可以让eslint对下行不报错
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+
+    // 还可以通过这种方式来达到ts不报错的效果
+    // @ts-ignore
+
+# 不满足 RESTFUL 风格的接口
+
+`json-server`不能直接处理，可以自己写中间件，在`__json_server_mock__`文件夹下新建`middleware.js`文件，因为是 js 文件，所以是 node 环境，要用 CommonJS 的规范
+
+再在`package.json`中添加中间件的配置进去，然后重启服务
+
+`"json-server": "json-server __json_server_mock__/db.json --watch --port 3001 --middlewares ./__json_server_mock__/middleware.js"`

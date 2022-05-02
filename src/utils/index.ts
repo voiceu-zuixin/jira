@@ -29,6 +29,8 @@ export const cleanObject = (object: object) => {
 export const useMount = (callback: () => void) => {
   useEffect(() => {
     callback()
+    //这样可以让eslint对下行不报错
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 }
 

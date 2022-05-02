@@ -1,21 +1,16 @@
-// import React from 'react'
 import './App.css'
-// import { ProjectListScreen } from 'test-screens/project-list'
-import { ProjectListScreen } from 'screens/project-list'
+// import { ProjectListScreen } from 'screens/project-list'
 // import { Test } from 'test/test'
 // import TestClass from 'test/test-class'
-// import { useEffect } from 'react'
+import LoginScreen from 'screens/login'
 
 function App() {
-  // console.log('app')
-  // useEffect(() => {
-  //   console.log('useEffect-app')
-  // }, [])
   return (
     <div className="App">
-      <ProjectListScreen />
+      {/* <ProjectListScreen /> */}
       {/* <Test /> */}
       {/* <TestClass /> */}
+      <LoginScreen />
       <code> '.env':{process.env.REACT_APP_API_URL}</code>
     </div>
   )
