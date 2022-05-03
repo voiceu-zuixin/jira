@@ -1,6 +1,12 @@
+/* 
+  已经注册了的用户是 username:jira  password:jira
+*/
+import { useAuth } from 'context/auth-context'
+
 // 登录注册模块组件
 export default function LoginScreen() {
-  const login = (param: { username: string; password: string }) => {}
+  // 此处就不用再给useAuth参数了，内部封装了
+  const { login, user } = useAuth()
 
   // 处理提交的方法
   const handleSubmit: React.FormEventHandler<HTMLFormElement> = (event) => {
@@ -18,6 +24,12 @@ export default function LoginScreen() {
   // 页面
   return (
     <form action="" onSubmit={handleSubmit}>
+      {user ? (
+        <div>
+          登录成功，欢迎你：{user?.name}
+          {user?.token}
+        </div>
+      ) : null}
       <div>
         <label htmlFor="username">用户名</label>
         {/* 就是要让id为字符串的username，而不是变量username */}
