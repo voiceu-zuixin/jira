@@ -5,6 +5,7 @@ import LoginScreen from 'screens/login'
 function App() {
   return (
     <div className="App">
+      <h2>woshi h2</h2>
       {/* <ProjectListScreen /> */}
       <LoginScreen />
       <code> '.env':{process.env.REACT_APP_API_URL}</code>
