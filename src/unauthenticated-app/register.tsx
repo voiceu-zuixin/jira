@@ -4,9 +4,9 @@
 import { useAuth } from 'context/auth-context'
 
 // 登录注册模块组件
-export default function LoginScreen() {
+export default function RegisterScreen() {
   // 此处就不用再给useAuth参数了，内部封装了，这样就能直接拿到login，user等参数了
-  const { login, user } = useAuth()
+  const { register } = useAuth()
 
   // 处理提交的方法
   const handleSubmit: React.FormEventHandler<HTMLFormElement> = (event) => {
@@ -17,19 +17,13 @@ export default function LoginScreen() {
     const username = (event.currentTarget.elements[0] as HTMLInputElement).value
     const password = (event.currentTarget.elements[1] as HTMLInputElement).value
 
-    // 调用login方法，login方法应该由src/context下的index中导入，封装到useAuth里了
-    login({ username, password })
+    // 调用register方法，register方法应该由src/context下的index中导入，封装到useAuth里了
+    register({ username, password })
   }
 
   // 页面
   return (
     <form action="" onSubmit={handleSubmit}>
-      {user ? (
-        <div>
-          登录成功，欢迎你：{user?.name}
-          {user?.token}
-        </div>
-      ) : null}
       <div>
         <label htmlFor="username">用户名</label>
         {/* 就是要让id为字符串的username，而不是变量username，为什么不直接写字符串呢 */}

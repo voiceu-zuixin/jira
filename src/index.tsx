@@ -4,7 +4,6 @@ import reportWebVitals from './reportWebVitals'
 import { loadDevTools } from 'jira-dev-tool'
 import ReactDOM from 'react-dom/client'
 import { AppProviders } from 'context'
-import 'test.less'
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 
