@@ -32,7 +32,7 @@ export default function LoginScreen() {
       ) : null}
       <div>
         <label htmlFor="username">用户名</label>
-        {/* 就是要让id为字符串的username，而不是变量username */}
+        {/* 就是要让id为字符串的username，而不是变量username，为什么不直接写字符串呢 */}
         <input type="text" name="" id={'username'} />
       </div>
       <div>
