@@ -1,2 +1,4 @@
 /config
 /scripts
+/commitlint.config.js
+/test.js
