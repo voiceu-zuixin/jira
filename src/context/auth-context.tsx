@@ -15,11 +15,30 @@ import React, { ReactNode, useState } from 'react'
 // 因为auth-provider中有login与此模块的login重名，所以起一个别名auth，通过auth.login调用，其他同理
 import * as auth from 'auth-provider'
 import { User } from 'screens/project-list/search-panel'
+import { http } from 'utils/http'
+import { useMount } from 'utils'
 
 // 定义AuthForm类型
 interface AuthForm {
   username: string
   password: string
+}
+
+// 一个用于保存当前user信息状态的函数，以防刷新后丢失user
+const bootstrapUser = async () => {
+  let user = null
+  // 虽然刷新了，但是在localStroage里面还是存的有token
+  const token = auth.getToken()
+
+  //如果有token，就拿着token去后端请求，获取当前的user是什么，并返回user
+  if (token) {
+    const data = await http('me', { token })
+    user = data.user
+  }
+
+  // console.log(user)
+  // 如果没有返回的还是null
+  return user
 }
 
 // 创建AuthContext的context
@@ -68,6 +87,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const logout = () => {
     return auth.logout().then(() => setUser(null))
   }
+
+  // 每次刷新的时候都要根据存好的token获取当前的user，防止刷新后user状态就没了
+  useMount(() => {
+    // 如果是未登录状态，那么bootstrapUser()返回的是null，null再setUser就没任何影响了
+    bootstrapUser().then(setUser)
+  })
 
   // 返回AuthContext.Provider
   return (

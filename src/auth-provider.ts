@@ -41,7 +41,7 @@ export const login = (data: { username: string; password: string }) => {
     },
     body: JSON.stringify(data)
   }).then(async (response) => {
-    // 如果成功返回response数据，
+    // 如果成功返回response数据，后续的操作会拿到这个user，进行更新当前state里的user
     // 就返回一个结果为经过handleUserResponse方法处理后的user的promise对象
     if (response.ok) {
       return handleUserResponse(await response.json())
@@ -70,5 +70,4 @@ export const register = (data: { username: string; password: string }) => {
 }
 
 // 退出，就是把auth字段删除，async变成一个异步函数，返回值是promise对象
-export const logout = async () =>
-  window.localStorage.removeItem(localStorageKey)
+export const logout = async () => window.localStorage.removeItem(localStorageKey)

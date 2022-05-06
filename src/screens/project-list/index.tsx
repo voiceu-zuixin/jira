@@ -2,10 +2,10 @@ import { List } from './list'
 import { SearchPanel } from './search-panel'
 import { useState, useEffect } from 'react'
 import { cleanObject, useMount, useDebounce } from 'utils'
-import qs from 'qs'
+import { useHttp } from 'utils/http'
 
 // 引入apiUrl
-const apiUrl = process.env.REACT_APP_API_URL
+// const apiUrl = process.env.REACT_APP_API_URL
 
 // 开发模式下函数体是会多次调用的，而且次数是不确定的，hooks的初次渲染调用次数是两次
 export const ProjectListScreen = () => {
@@ -18,32 +18,24 @@ export const ProjectListScreen = () => {
   const [list, setList] = useState([])
   const [users, setUsers] = useState([])
 
+  // 使用useHttp，得到一个函数，用于替换之前的fetch操作，还可以自动携带token
+  const client = useHttp()
+
   // 防抖
   const debouncedParam = useDebounce(param, 300)
 
   // param改变就会触发的useEffect
   useEffect(() => {
-    // fetch请求/project路由，GET方式
-    fetch(`${apiUrl}/projects?${qs.stringify(cleanObject(debouncedParam))}`)
-      // 返回一个promise对象，response带有响应数据
-      .then(async (response) => {
-        if (response.ok) {
-          // 更新list数组,response.json()是一个有成功的promise对象，await后变成其结果，
-          // 此处是数组，更新过后，会传给子组件List
-          setList(await response.json())
-        }
-      })
+    // 利用useHttp来替换fetch操作，fetch内部的操作在其中已经实现了
+    client('projects', { data: cleanObject(debouncedParam) }).then(setList)
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedParam])
 
   // 首次渲染的时候请求user，传给子组件，进行render
   // 换成自定义的useMount，减少空数组
   useMount(() => {
-    fetch(`${apiUrl}/users`).then(async (response) => {
-      if (response.ok) {
-        // 更新user
-        setUsers(await response.json())
-      }
-    })
+    client('users').then(setUsers)
   }) //不用空数组也可以只在首次渲染的时候执行该函数
 
   return (
