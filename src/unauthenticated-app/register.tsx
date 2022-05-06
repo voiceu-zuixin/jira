@@ -1,6 +1,7 @@
 /* 
   已经注册了的用户是 username:jira  password:jira
 */
+import { Button, Form, Input } from 'antd'
 import { useAuth } from 'context/auth-context'
 
 // 登录注册模块组件
@@ -9,31 +10,27 @@ export default function RegisterScreen() {
   const { register } = useAuth()
 
   // 处理提交的方法
-  const handleSubmit: React.FormEventHandler<HTMLFormElement> = (event) => {
-    // 首先禁止掉默认行为，因为要做预处理
-    event.preventDefault()
-
-    // 处理username和password
-    const username = (event.currentTarget.elements[0] as HTMLInputElement).value
-    const password = (event.currentTarget.elements[1] as HTMLInputElement).value
-
+  const handleSubmit = (values: { username: string; password: string }) => {
     // 调用register方法，register方法应该由src/context下的index中导入，封装到useAuth里了
-    register({ username, password })
+    register(values)
   }
 
   // 页面
   return (
-    <form action="" onSubmit={handleSubmit}>
-      <div>
-        <label htmlFor="username">用户名</label>
-        {/* 就是要让id为字符串的username，而不是变量username，为什么不直接写字符串呢 */}
-        <input type="text" name="" id={'username'} />
-      </div>
-      <div>
-        <label htmlFor="password">密码</label>
-        <input type="text" name="" id={'password'} />
-      </div>
-      <button type="submit">注册</button>
-    </form>
+    <Form onFinish={handleSubmit}>
+      <Form.Item name={'username'} rules={[{ required: true, message: '请输入用户名' }]}>
+        <Input placeholder="用户名" type="text" name="" id={'username'} />
+      </Form.Item>
+
+      <Form.Item name={'password'} rules={[{ required: true, message: '请输入密码' }]}>
+        <Input placeholder="密码" type="text" name="" id={'password'} />
+      </Form.Item>
+
+      <Form.Item>
+        <Button htmlType={'submit'} type="primary">
+          注册
+        </Button>
+      </Form.Item>
+    </Form>
   )
 }

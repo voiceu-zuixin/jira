@@ -2,6 +2,12 @@ import './index.css'
 import App from './App'
 import reportWebVitals from './reportWebVitals'
 import { loadDevTools } from 'jira-dev-tool'
+// 保证antd在dev-tool后面，可以覆盖dev-tool里的antd样式
+// 是不是因为tsconfig的baseUrl写成了'./src'所以找不到
+import '../node_modules/antd/dist/antd.less'
+
+// import 'antd/dist/antd.less'
+import 'antd'
 import ReactDOM from 'react-dom/client'
 import { AppProviders } from 'context'
 

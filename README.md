@@ -161,3 +161,15 @@ useEffect，空数组的时候会报警告，配置下面的到 eslintConfig
 再在`package.json`中添加中间件的配置进去，然后重启服务
 
 `"json-server": "json-server __json_server_mock__/db.json --watch --port 3001 --middlewares ./__json_server_mock__/middleware.js"`
+
+,
+"plugins": [
+[
+"import",
+{
+"libraryName": "antd",
+"libraryDirectory": "es",
+"style": "true"
+}
+]
+]

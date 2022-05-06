@@ -2,6 +2,16 @@
   "compilerOptions": {
     // 后续的代码，可以不用../../这样去找相对路径，把./src当做根路径
     "baseUrl": "./src",
+
+    // 也可以通过baseUrl和paths配合的方式，达成多个根目录的配置
+    // "baseUrl": ".",
+    // "paths": {
+    //   "*":[
+    //     "./src/*",
+    //     "./node_modules/*"
+    //   ]
+    // },
+
     "target": "es5",
     "lib": [
       "dom",
