@@ -17,16 +17,11 @@ interface ListProps {
   users: User[]
 }
 
-// 一个生成随机的key的函数
-const randomKey = () => {
-  return 10 * Math.random()
-}
-
 export const List = ({ list, users }: ListProps) => {
   return (
     <Table
       // Table组件必须要有不同的key，这里暂时写一个随机的key函数
-      rowKey={randomKey}
+      rowKey={'id'}
       pagination={false}
       columns={[
         {
