@@ -1,6 +1,6 @@
 import './App.css'
 import { useAuth } from 'context/auth-context'
-import AuthenticatedAapp from 'authenticated-app'
+import AuthenticatedAapp from 'authenticated-app/authenticated-app'
 import { UnauthenticatedApp } from 'unauthenticated-app'
 
 function App() {

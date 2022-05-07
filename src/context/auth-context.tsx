@@ -13,7 +13,7 @@
 
 import React, { ReactNode, useState } from 'react'
 // 因为auth-provider中有login与此模块的login重名，所以起一个别名auth，通过auth.login调用，其他同理
-import * as auth from 'auth-provider'
+import * as auth from 'utils/auth-provider'
 import { User } from 'screens/project-list/search-panel'
 import { http } from 'utils/http'
 import { useMount } from 'utils'
