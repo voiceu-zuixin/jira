@@ -1,4 +1,5 @@
 import styled from '@emotion/styled'
+import { Row } from 'components/lib'
 import { useAuth } from 'context/auth-context'
 import { ProjectListScreen } from 'screens/project-list'
 
@@ -6,11 +7,11 @@ export default function AuthenticatedAapp() {
   const { logout } = useAuth()
   return (
     <Container>
-      <Header>
-        <HeaderLeft>
-          <h3>Logo</h3>
-          <h3>项目</h3>
-          <h3>用户</h3>
+      <Header between={true}>
+        <HeaderLeft gap={true}>
+          <h2>Logo</h2>
+          <h2>项目</h2>
+          <h2>用户</h2>
         </HeaderLeft>
         <HeaderRight>
           <button onClick={logout}>登出</button>
@@ -30,17 +31,10 @@ const Container = styled.div`
   grid-template-rows: 6rem 1fr;
 `
 
-const Header = styled.header`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-`
+const Header = styled(Row)``
 
-const HeaderLeft = styled.div`
-  display: flex;
-  align-items: center;
-`
+// 引入component下定义的Row组件，可以传入gap属性
+const HeaderLeft = styled(Row)``
 
 const HeaderRight = styled.div``
 
