@@ -3,11 +3,24 @@ import { Row } from 'components/lib'
 import { useAuth } from 'context/auth-context'
 import { ProjectListScreen } from 'screens/project-list'
 import { ReactComponent as SoftwareLogo } from 'assets/software-logo.svg'
-import { Button, Dropdown, Menu } from 'antd'
+import { Button, Dropdown, Menu, MenuProps } from 'antd'
 // import softwareLogo from 'assets/software-logo.svg'
 
 export default function AuthenticatedAapp() {
   const { logout, user } = useAuth()
+
+  // antd4.20.0开始已经舍弃了Menu之前的写法，现在要写items,具体看https://ant.design/components/menu-cn/
+  const items: MenuProps['items'] = [
+    {
+      label: (
+        <Button type={'link'} onClick={logout}>
+          登出
+        </Button>
+      ),
+      key: 'logout'
+    }
+  ]
+
   return (
     <Container>
       <Header between={true}>
@@ -18,17 +31,7 @@ export default function AuthenticatedAapp() {
           <h2>用户</h2>
         </HeaderLeft>
         <HeaderRight>
-          <Dropdown
-            overlay={
-              <Menu>
-                <Menu.Item key={'logout'}>
-                  <Button type={'link'} onClick={logout}>
-                    登出
-                  </Button>
-                </Menu.Item>
-              </Menu>
-            }
-          >
+          <Dropdown overlay={<Menu items={items}></Menu>}>
             <Button type={'link'} onClick={(e) => e.preventDefault()}>
               Hi,{user?.name}
             </Button>
