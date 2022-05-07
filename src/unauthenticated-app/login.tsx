@@ -4,7 +4,8 @@
 import { useAuth } from 'context/auth-context'
 
 // 引入antd组件
-import { Button, Form, Input } from 'antd'
+import { Form, Input } from 'antd'
+import { LongButton } from 'unauthenticated-app'
 
 // 登录注册模块组件
 export default function LoginScreen() {
@@ -29,9 +30,9 @@ export default function LoginScreen() {
       </Form.Item>
 
       <Form.Item>
-        <Button htmlType={'submit'} type="primary">
+        <LongButton htmlType={'submit'} type="primary">
           登录
-        </Button>
+        </LongButton>
       </Form.Item>
     </Form>
   )

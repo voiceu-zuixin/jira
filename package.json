@@ -18,7 +18,8 @@
       "prettier"
     ],
     "rules": {
-      "react-hooks/exhaustive-deps": "warn"
+      "react-hooks/exhaustive-deps": "warn",
+      "jsx-a11y/anchor-is-valid":"off"
     }
   },
   "browserslist": {
@@ -35,6 +36,8 @@
   },
   "dependencies": {
     "@babel/core": "^7.16.0",
+    "@emotion/react": "^11.9.0",
+    "@emotion/styled": "^11.8.1",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.3",
     "@svgr/webpack": "^5.5.0",
     "@testing-library/jest-dom": "^5.16.4",

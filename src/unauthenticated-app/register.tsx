@@ -1,8 +1,9 @@
 /* 
   已经注册了的用户是 username:jira  password:jira
 */
-import { Button, Form, Input } from 'antd'
+import { Form, Input } from 'antd'
 import { useAuth } from 'context/auth-context'
+import { LongButton } from 'unauthenticated-app'
 
 // 登录注册模块组件
 export default function RegisterScreen() {
@@ -27,9 +28,9 @@ export default function RegisterScreen() {
       </Form.Item>
 
       <Form.Item>
-        <Button htmlType={'submit'} type="primary">
+        <LongButton htmlType={'submit'} type="primary">
           注册
-        </Button>
+        </LongButton>
       </Form.Item>
     </Form>
   )
