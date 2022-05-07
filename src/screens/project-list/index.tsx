@@ -1,9 +1,11 @@
 import { List } from './list'
 import { SearchPanel } from './search-panel'
-import { useState, useEffect } from 'react'
-import { cleanObject, useMount, useDebounce } from 'utils'
-import { useHttp } from 'utils/http'
+import { useState } from 'react'
+import { useDebounce } from 'utils'
 import styled from '@emotion/styled'
+import { Typography } from 'antd'
+import { useProjects } from 'utils/project'
+import { useUser } from 'utils/user'
 
 // 引入apiUrl
 // const apiUrl = process.env.REACT_APP_API_URL
@@ -16,35 +18,27 @@ export const ProjectListScreen = () => {
     name: '',
     personId: ''
   })
-  const [list, setList] = useState([])
-  const [users, setUsers] = useState([])
-
-  // 使用useHttp，得到一个函数，用于替换之前的fetch操作，还可以自动携带token
-  const client = useHttp()
 
   // 防抖
   const debouncedParam = useDebounce(param, 300)
 
-  // param改变就会触发的useEffect
-  useEffect(() => {
-    // 利用useHttp来替换fetch操作，fetch内部的操作在其中已经实现了
-    client('projects', { data: cleanObject(debouncedParam) }).then(setList)
+  // 导入useProjects，内部封装了useAsync，返回值可以直接用
+  const { isLoading, error, data: list } = useProjects(debouncedParam)
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [debouncedParam])
-
-  // 首次渲染的时候请求user，传给子组件，进行render
-  // 换成自定义的useMount，减少空数组
-  useMount(() => {
-    client('users').then(setUsers)
-  }) //不用空数组也可以只在首次渲染的时候执行该函数
+  // 导入useUsers
+  const { data: users } = useUser()
 
   return (
     <Container>
       <h1>项目列表</h1>
+
       {/* 通过props传入state */}
-      <SearchPanel users={users} param={param} setParam={setParam} />
-      <List users={users} list={list} />
+      <SearchPanel users={users || []} param={param} setParam={setParam} />
+
+      {/* 如果异步请求出错了，就渲染message */}
+      {error ? <Typography.Text type={'danger'}>{error.message}</Typography.Text> : null}
+
+      <List loading={isLoading} users={users || []} dataSource={list || []} />
     </Container>
   )
 }

@@ -1,9 +1,9 @@
 // 引入User类型
-import { Table } from 'antd'
+import { Table, TableProps } from 'antd'
 import { User } from 'screens/project-list/search-panel'
 import dayjs from 'dayjs'
 
-interface Project {
+export interface Project {
   id: string
   name: string
   personId: string
@@ -12,12 +12,11 @@ interface Project {
   created: number
 }
 
-interface ListProps {
-  list: Project[]
+interface ListProps extends TableProps<Project> {
   users: User[]
 }
 
-export const List = ({ list, users }: ListProps) => {
+export const List = ({ users, ...props }: ListProps) => {
   return (
     <Table
       // Table组件必须要有不同的key，这里暂时写一个随机的key函数
@@ -53,7 +52,8 @@ export const List = ({ list, users }: ListProps) => {
           }
         }
       ]}
-      dataSource={list}
+      // 这其中包含了剩余的属性，比如DataSource
+      {...props}
     ></Table>
   )
 }
