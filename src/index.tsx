@@ -1,6 +1,6 @@
 import App from './App'
 import reportWebVitals from './reportWebVitals'
-import { loadDevTools } from 'jira-dev-tool'
+import { DevTools, loadServer } from 'jira-dev-tool'
 // 保证antd在dev-tool后面，可以覆盖dev-tool里的antd样式
 // 是不是因为tsconfig的baseUrl写成了'./src'所以找不到
 import '../node_modules/antd/dist/antd.less'
@@ -13,13 +13,14 @@ import { AppProviders } from 'context'
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 
 // 用开发工具包起来，就能显示后端工具了
-loadDevTools(() => {
+loadServer(() => {
   root.render(
     // 不用这个严格模式，之前的代码都是直接包裹路由，也没用严格模式
     // react 17的时候严格模式不会render2遍，react 18会
 
     // 用有context的AppProviders包裹起来
     <AppProviders>
+      <DevTools />
       <App />
     </AppProviders>
   )
