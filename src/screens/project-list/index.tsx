@@ -3,6 +3,7 @@ import { SearchPanel } from './search-panel'
 import { useState, useEffect } from 'react'
 import { cleanObject, useMount, useDebounce } from 'utils'
 import { useHttp } from 'utils/http'
+import styled from '@emotion/styled'
 
 // 引入apiUrl
 // const apiUrl = process.env.REACT_APP_API_URL
@@ -39,10 +40,15 @@ export const ProjectListScreen = () => {
   }) //不用空数组也可以只在首次渲染的时候执行该函数
 
   return (
-    <div>
+    <Container>
+      <h1>项目列表</h1>
       {/* 通过props传入state */}
       <SearchPanel users={users} param={param} setParam={setParam} />
       <List users={users} list={list} />
-    </div>
+    </Container>
   )
 }
+
+const Container = styled.div`
+  padding: 3.2rem;
+`
