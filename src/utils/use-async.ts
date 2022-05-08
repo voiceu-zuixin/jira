@@ -1,20 +1,26 @@
 import { useState } from 'react'
 
 interface State<D> {
-  error: Error | null
   data: D | null
+  error: Error | null
   // status的缩写
   stat: 'idle' | 'loading' | 'error' | 'success'
 }
 
 const defaultInitialState: State<null> = {
-  error: null,
   data: null,
+  error: null,
   stat: 'idle'
 }
 
+// 当不是接口而是类/对象的时候，就用typeof就行
+const defaultConfig = {
+  throwOnError: false
+}
+
 // 泛型可以看成是，D是类型的形参，就像函数一样
-export const useAsync = <D>(initialState?: State<D>) => {
+export const useAsync = <D>(initialState?: State<D>, initialConfig?: typeof defaultConfig) => {
+  const config = { ...defaultConfig, ...initialConfig }
   const [state, setState] = useState<State<D>>({
     ...defaultInitialState,
     ...initialState
@@ -56,6 +62,8 @@ export const useAsync = <D>(initialState?: State<D>) => {
       .catch((error) => {
         //如果遇到异常，就setError
         setError(error)
+        // 如果throwOnError为true，就要抛出promise对象
+        if (config.throwOnError) return Promise.reject(error)
         return error
       })
   }

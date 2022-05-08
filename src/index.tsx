@@ -1,3 +1,4 @@
+import React from 'react'
 import App from './App'
 import reportWebVitals from './reportWebVitals'
 import { DevTools, loadServer } from 'jira-dev-tool'
@@ -17,12 +18,13 @@ loadServer(() => {
   root.render(
     // 不用这个严格模式，之前的代码都是直接包裹路由，也没用严格模式
     // react 17的时候严格模式不会render2遍，react 18会
-
     // 用有context的AppProviders包裹起来
-    <AppProviders>
+    <React.StrictMode>
       <DevTools />
-      <App />
-    </AppProviders>
+      <AppProviders>
+        <App />
+      </AppProviders>
+    </React.StrictMode>
   )
 })
 

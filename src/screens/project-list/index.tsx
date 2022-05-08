@@ -22,7 +22,7 @@ export const ProjectListScreen = () => {
   // 防抖
   const debouncedParam = useDebounce(param, 300)
 
-  // 导入useProjects，内部封装了useAsync，返回值可以直接用
+  // 导入useProjects，内部封装了useAsync，返回值是可以直接用
   const { isLoading, error, data: list } = useProjects(debouncedParam)
 
   // 导入useUsers

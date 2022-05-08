@@ -6,16 +6,24 @@ import { useAuth } from 'context/auth-context'
 // 引入antd组件
 import { Form, Input } from 'antd'
 import { LongButton } from 'unauthenticated-app'
+import { useAsync } from 'utils/use-async'
 
 // 登录注册模块组件
-export default function LoginScreen() {
+export default function LoginScreen({ onError }: { onError: (error: Error) => void }) {
   // 此处就不用再给useAuth参数了，内部封装了，这样就能直接拿到login，user等参数了
   const { login } = useAuth()
 
+  // 给登录界面加上loading效果
+  const { run, isLoading } = useAsync(undefined, { throwOnError: true })
+
   // 处理提交的方法
-  const handleSubmit = (values: { username: string; password: string }) => {
+  const handleSubmit = async (values: { username: string; password: string }) => {
     // 调用login方法，login方法应该由src/context下的index中导入，封装到useAuth里了
-    login(values)
+    try {
+      await run(login(values))
+    } catch (error) {
+      onError(error as Error)
+    }
   }
 
   // 页面
@@ -30,7 +38,7 @@ export default function LoginScreen() {
       </Form.Item>
 
       <Form.Item>
-        <LongButton htmlType={'submit'} type="primary">
+        <LongButton loading={isLoading} htmlType={'submit'} type="primary">
           登录
         </LongButton>
       </Form.Item>

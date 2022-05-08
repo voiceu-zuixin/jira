@@ -55,7 +55,7 @@ export const http = async (
   })
 }
 
-// 自动携带token，传入http请求中
+// 自动携带token，传入http请求中，返回一个函数，该函数运行后会返回fetch请求的结果
 export const useHttp = () => {
   const { user } = useAuth()
   // 以下函数跟http的类型是一样的，除了都抽离出来，还有这一种写法
