@@ -20,7 +20,6 @@ export default function AuthenticatedAapp() {
       key: 'logout'
     }
   ]
-
   return (
     <Container>
       <Header between={true}>
