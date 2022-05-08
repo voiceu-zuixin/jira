@@ -11,12 +11,14 @@
 
 */
 
-import React, { ReactNode, useState } from 'react'
+import React, { ReactNode } from 'react'
 // 因为auth-provider中有login与此模块的login重名，所以起一个别名auth，通过auth.login调用，其他同理
 import * as auth from 'utils/auth-provider'
 import { User } from 'screens/project-list/search-panel'
 import { http } from 'utils/http'
 import { useMount } from 'utils'
+import { useAsync } from 'utils/use-async'
+import { FullPageErrorFallback, FullPageLoading } from 'components/lib'
 
 // 定义AuthForm类型
 interface AuthForm {
@@ -65,7 +67,18 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   */
   // 指定泛型为<User | null>，意思是后面参数initialState: <User | null> | (() => <User | null>)
   // 初始user为null
-  const [user, setUser] = useState<User | null>(null)
+  // const [user, setUser] = useState<User | null>(null)
+
+  // 用useAsync来改造，展示loading效果,data:user这是起别名，换成user
+  const {
+    data: user,
+    error,
+    isLoading,
+    isIdle,
+    isError,
+    run,
+    setData: setUser
+  } = useAsync<User | null>()
 
   // login函数，传入form表单数据，类型是上方定义的接口AuthForm类型
   const login = (form: AuthForm) => {
@@ -91,8 +104,20 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   // 每次刷新的时候都要根据存好的token获取当前的user，防止刷新后user状态就没了
   useMount(() => {
     // 如果是未登录状态，那么bootstrapUser()返回的是null，null再setUser就没任何影响了
-    bootstrapUser().then(setUser)
+    // setUser会在run内部调用
+    run(bootstrapUser())
   })
+
+  // 如果请求还没有结果的时候，就渲染loading
+  if (isIdle || isLoading) {
+    return <FullPageLoading />
+  }
+
+  // 如果在刷新的时候出错，那么会自动弹到登录界面，如果不给用户提示的话，用户可能一直反复登录
+  // 体验不好
+  if (isError) {
+    return <FullPageErrorFallback error={error} />
+  }
 
   // 返回AuthContext.Provider
   return (
