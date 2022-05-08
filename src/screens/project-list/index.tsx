@@ -1,12 +1,11 @@
 import { List } from './list'
 import { SearchPanel } from './search-panel'
 import { useState } from 'react'
-import { useDebounce } from 'utils'
+import { useDebounce, useDocumentTitle } from 'utils'
 import styled from '@emotion/styled'
 import { Typography } from 'antd'
 import { useProjects } from 'utils/project'
 import { useUser } from 'utils/user'
-import { Helmet } from 'react-helmet'
 
 // 引入apiUrl
 // const apiUrl = process.env.REACT_APP_API_URL
@@ -29,12 +28,10 @@ export const ProjectListScreen = () => {
   // 导入useUsers
   const { data: users } = useUser()
 
+  useDocumentTitle('项目列表', false)
+
   return (
     <Container>
-      <Helmet>
-        <title>项目列表</title>
-      </Helmet>
-
       <h1>项目列表</h1>
 
       {/* 通过props传入state */}
