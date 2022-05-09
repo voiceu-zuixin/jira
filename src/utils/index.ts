@@ -61,6 +61,7 @@ export const useDebounce = <V>(value: V, delay?: number) => {
   return debouncedValue
 }
 
+// 改变html的title
 export const useDocumentTitle = (title: string, keepOnUnmount: boolean = true) => {
   // 记录旧title，useEffect空数组依赖的时候用这种方式
   // const oldTitle = document.title
@@ -83,3 +84,8 @@ export const useDocumentTitle = (title: string, keepOnUnmount: boolean = true) =
     // 这样写的话，不利于别人读代码，而且react也会警告，所以最好还是写上依赖，那么就要有useRef来解决
   }, [keepOnUnmount, oldTitle])
 }
+
+// 重置路由，这里的origin就是根路径，然后会刷新页面，比如在开发环境下就是到loaclhost:3000
+// 这里一刷新就到了loaclhost:3000，然后会bootstrapUser，查询当前是否登录，进行渲染登录还是不登录的页面
+// 然后加入已登录，就进去navigate，跳转到 '/projects'的路由下了
+export const resetRoute = () => (window.location.href = window.location.origin)

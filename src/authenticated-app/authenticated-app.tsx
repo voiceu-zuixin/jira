@@ -13,6 +13,7 @@ import { BrowserRouter as Router } from 'react-router-dom'
   react是核心，react-dom主要把逻辑应用到浏览器上，react-native主要把逻辑应用到ios/Android
 */
 import ProjectScreen from 'screens/project'
+import { resetRoute } from 'utils'
 
 export default function AuthenticatedAapp() {
   return (
@@ -24,6 +25,9 @@ export default function AuthenticatedAapp() {
           <Routes>
             <Route path={'/projects'} element={<ProjectListScreen />} />
             <Route path={'/projects/:projectId/*'} element={<ProjectScreen />} />
+            {/* <Navigate to={'/projects'} /> */}
+            {/* 要用这种方式才能用上Navigate */}
+            <Route path="*" element={<Navigate to="/projects" replace={true} />} />
           </Routes>
         </Router>
       </Main>
@@ -49,7 +53,9 @@ const PageHeader = () => {
   return (
     <Header between={true}>
       <HeaderLeft gap={true}>
-        <SoftwareLogo width={'18rem'} color={'rgb(38,132,255'} />
+        <Button type={'link'} onClick={resetRoute}>
+          <SoftwareLogo width={'18rem'} color={'rgb(38,132,255'} />
+        </Button>
         <h2>项目</h2>
         <h2>用户</h2>
       </HeaderLeft>

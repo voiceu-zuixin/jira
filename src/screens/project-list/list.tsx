@@ -32,6 +32,7 @@ export const List = ({ users, ...props }: ListProps) => {
           sorter: (a, b) => a.name.localeCompare(b.name),
           render(project) {
             // 这里的to虽然是导向project.id，但是会自动在上层路由下添加该project.id，形成子路由
+            // 而且注意，这里的Link的to后面没有加 / ，加了 / 就是根路由了
             return <Link to={String(project.id)}>{project.name}</Link>
           }
         },
