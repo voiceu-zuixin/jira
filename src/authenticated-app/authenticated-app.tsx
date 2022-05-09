@@ -4,9 +4,35 @@ import { useAuth } from 'context/auth-context'
 import { ProjectListScreen } from 'screens/project-list'
 import { ReactComponent as SoftwareLogo } from 'assets/software-logo.svg'
 import { Button, Dropdown, Menu, MenuProps } from 'antd'
-// import softwareLogo from 'assets/software-logo.svg'
+// react-router 6之后，路由都需要routes包裹起来
+// https://github.com/remix-run/react-router/blob/main/docs/getting-started/installation.md
+import { Navigate, Routes, Route } from 'react-router'
+import { BrowserRouter as Router } from 'react-router-dom'
+/*  
+  react-router 和 react-router-dom 的关系类似于 react 和 react-dom /react-native
+  react是核心，react-dom主要把逻辑应用到浏览器上，react-native主要把逻辑应用到ios/Android
+*/
+import ProjectScreen from 'screens/project'
 
 export default function AuthenticatedAapp() {
+  return (
+    <Container>
+      <PageHeader />
+      <Main>
+        {/* BrowserRouter as Router */}
+        <Router>
+          <Routes>
+            <Route path={'/projects'} element={<ProjectListScreen />} />
+            <Route path={'/projects/:projectId/*'} element={<ProjectScreen />} />
+          </Routes>
+        </Router>
+      </Main>
+    </Container>
+  )
+}
+
+// PageHeader组件
+const PageHeader = () => {
   const { logout, user } = useAuth()
 
   // antd4.20.0开始已经舍弃了Menu之前的写法，现在要写items,具体看https://ant.design/components/menu-cn/
@@ -21,26 +47,20 @@ export default function AuthenticatedAapp() {
     }
   ]
   return (
-    <Container>
-      <Header between={true}>
-        <HeaderLeft gap={true}>
-          {/* <img src={softwareLogo} alt=''/> */}
-          <SoftwareLogo width={'18rem'} color={'rgb(38,132,255'} />
-          <h2>项目</h2>
-          <h2>用户</h2>
-        </HeaderLeft>
-        <HeaderRight>
-          <Dropdown overlay={<Menu items={items}></Menu>}>
-            <Button type={'link'} onClick={(e) => e.preventDefault()}>
-              Hi,{user?.name}
-            </Button>
-          </Dropdown>
-        </HeaderRight>
-      </Header>
-      <Main>
-        <ProjectListScreen />
-      </Main>
-    </Container>
+    <Header between={true}>
+      <HeaderLeft gap={true}>
+        <SoftwareLogo width={'18rem'} color={'rgb(38,132,255'} />
+        <h2>项目</h2>
+        <h2>用户</h2>
+      </HeaderLeft>
+      <HeaderRight>
+        <Dropdown overlay={<Menu items={items}></Menu>}>
+          <Button type={'link'} onClick={(e) => e.preventDefault()}>
+            Hi,{user?.name}
+          </Button>
+        </Dropdown>
+      </HeaderRight>
+    </Header>
   )
 }
 
