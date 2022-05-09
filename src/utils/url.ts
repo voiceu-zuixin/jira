@@ -6,8 +6,12 @@ import { cleanObject } from 'utils'
 export const useUrlQueryParam = <K extends string>(keys: K[]) => {
   // useSearchParams是react-router-dom自带的，可以读取url的数据，但是要指定方法才能拿到内部数据
   const [searchParams, setSearchParams] = useSearchParams()
+
+  // 测试Object.fromEntries(searchParams)是什么
+  // console.log(Object.fromEntries(searchParams))
+
   return [
-    // 这里每次运行useUrlQueryParam，都会创建出一个新的值，所以需要用useMemo
+    // 这里每次运行useUrlQueryParam，都会创建出一个新的值，所以需要用useMemo，会把第一个参数返回出去
     useMemo(
       () =>
         keys.reduce((prev, key) => {
@@ -25,13 +29,19 @@ export const useUrlQueryParam = <K extends string>(keys: K[]) => {
     // 后面有可能会传入数组，所以先用unknown类型
     // 这里用到了迭代器iterator，
     (params: Partial<{ [key in K]: unknown }>) => {
+      // 因为searchParams要拿到{name: '骑手', personId: '2'}的name，personId等属性，必须要通过get方法
+      // 本身的话是一个包含了其他方法的对象，通过Object.fromEntries(searchParams)就能得到{name: '骑手', personId: '2'}的形式的对象
       // 处理传入的searchParams，Object.fromEntries方法把键值对列表转换为一个对象
       // 然后用params替换该对象，再cleanObject
       const o = cleanObject({
         ...Object.fromEntries(searchParams),
         ...params
       }) as URLSearchParamsInit
-      return setSearchParams(o)
+
+      // 然后把处理之后的对象进行更新，setSearchParams方法可以把参数更新到url中
+      // return setSearchParams(o)
+      setSearchParams(o) //感觉这里不用return也行
+      // setSearchParams({name: '骑手', personId: '3'}) //感觉这里不用return也行
     }
   ] as const //解决数组类型不一致的时候，ts推导类型会不易理解
 }

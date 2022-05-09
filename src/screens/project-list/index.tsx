@@ -15,7 +15,10 @@ export const ProjectListScreen = () => {
   // 初始化param，用于一开始的输入框为空白,在子组件里输入后,onChange会触发setParam,
   // 并进行更新param,然后再次传给子组件,进行渲染,保留在输入框
 
-  // 从url中获取param，这种解构是按顺序来的
+  // 从url中获取param，这种解构是按顺序来的，经过解构出来的param是通过url查询后形成的对象
+  // 比如{name: '骑手', personId: '2'}
+  // 当SearchPanel的value改变的时候发生onChange，调用setParam，
+  // setParam内部会
   const [param, setParam] = useUrlQueryParam(['name', 'personId'])
 
   // 防抖
