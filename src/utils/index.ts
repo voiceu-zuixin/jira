@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 // 判断是0还是undefined或者null，只有后两者才是真的false
 export const isFalsy = (value: unknown) => (value === 0 ? false : !value)
@@ -62,8 +62,11 @@ export const useDebounce = <V>(value: V, delay?: number) => {
 }
 
 export const useDocumentTitle = (title: string, keepOnUnmount: boolean = true) => {
-  // 记录旧title
-  const oldTitle = document.title
+  // 记录旧title，useEffect空数组依赖的时候用这种方式
+  // const oldTitle = document.title
+
+  // 记录旧title，用useRef
+  const oldTitle = useRef(document.title).current
 
   useEffect(() => {
     document.title = title
@@ -75,7 +78,8 @@ export const useDocumentTitle = (title: string, keepOnUnmount: boolean = true) =
         document.title = oldTitle
       }
     }
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+    // 如果不指定依赖，空数组[]，读到的就是最开始的旧title，这是利用了闭包原理，不理解的话，有可能会写出bug
+    // 这样写的话，不利于别人读代码，而且react也会警告，所以最好还是写上依赖，那么就要有useRef来解决
+  }, [keepOnUnmount, oldTitle])
 }
