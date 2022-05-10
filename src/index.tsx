@@ -8,7 +8,7 @@ import { DevTools, loadServer } from 'jira-dev-tool'
 import '../node_modules/antd/dist/antd.less'
 
 // import 'antd/dist/antd.less'
-import 'antd'
+// import 'antd'
 import ReactDOM from 'react-dom/client'
 import { AppProviders } from 'context'
 
@@ -21,8 +21,8 @@ loadServer(() => {
     // react 17的时候严格模式不会render2遍，react 18会
     // 用有context的AppProviders包裹起来
     <React.StrictMode>
-      <DevTools />
       <AppProviders>
+        <DevTools />
         <App />
       </AppProviders>
     </React.StrictMode>

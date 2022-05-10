@@ -11,7 +11,6 @@ function App() {
     <div className="App">
       <ErrorBoundary fallbackRender={FullPageErrorFallback}>
         {user ? <AuthenticatedAapp /> : <UnauthenticatedApp />}
-        <code> '.env':{process.env.REACT_APP_API_URL}</code>
       </ErrorBoundary>
     </div>
   )

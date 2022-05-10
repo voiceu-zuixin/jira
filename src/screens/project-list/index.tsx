@@ -34,9 +34,16 @@ export const ProjectListScreen = () => {
       <SearchPanel users={users || []} param={param} setParam={setParam} />
 
       {/* 如果异步请求出错了，就渲染message */}
-      {error ? <Typography.Text type={'danger'}>{error.message}</Typography.Text> : null}
+      {error ? (
+        <Typography.Text type={'danger'}>{error.message}</Typography.Text>
+      ) : null}
 
-      <List refresh={retry} loading={isLoading} users={users || []} dataSource={list || []} />
+      <List
+        refresh={retry}
+        loading={isLoading}
+        users={users || []}
+        dataSource={list || []}
+      />
     </Container>
   )
 }

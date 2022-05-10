@@ -162,14 +162,20 @@ useEffect，空数组的时候会报警告，配置下面的到 eslintConfig
 
 `"json-server": "json-server __json_server_mock__/db.json --watch --port 3001 --middlewares ./__json_server_mock__/middleware.js"`
 
-,
-"plugins": [
-[
-"import",
-{
-"libraryName": "antd",
-"libraryDirectory": "es",
-"style": "true"
-}
-]
-]
+# 缺失的章节
+
+### 用状态提升实现 projectModal 状态管理
+
+### 用 composition component 实现 modal 状态共享
+
+### 用 useState 实现 useUndo
+
+### 阻止在已卸载组件上赋值
+
+### 用 useCallback 解决无限渲染问题
+
+### 合并状态，改进 useUndo
+
+### 用 useReducer 改写 useUndo
+
+### 用 useReducer 改造 useAsync
