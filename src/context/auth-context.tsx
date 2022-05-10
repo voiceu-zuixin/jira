@@ -122,7 +122,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   // 返回AuthContext.Provider
   return (
     // 看一下React.createContext的用法
-    <AuthContext.Provider children={children} value={{ user, login, register, logout }} />
+    <AuthContext.Provider
+      children={children}
+      value={{ user, login, register, logout }}
+    />
   )
 }
 

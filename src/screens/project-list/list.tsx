@@ -27,7 +27,8 @@ export const List = ({ users, ...props }: ListProps) => {
 
   // 用柯里化来改造不同时机才能获取参数的函数
   // 通过then来让点击收藏后自动刷新页面
-  const pinProject = (id: number) => (pin: boolean) => mutate({ id, pin }).then(props.refresh)
+  const pinProject = (id: number) => (pin: boolean) =>
+    mutate({ id, pin }).then(props.refresh)
 
   return (
     <Table
@@ -71,14 +72,23 @@ export const List = ({ users, ...props }: ListProps) => {
           // 如果没有，那么第一第二都是一样的数据
           // 第三个参数是dataIndex
           render(project) {
-            return <span>{users.find((user) => user.id === project.personId)?.name || '未知'}</span>
+            return (
+              <span>
+                {users.find((user) => user.id === project.personId)?.name ||
+                  '未知'}
+              </span>
+            )
           }
         },
         {
           title: '创建时间',
           render(project) {
             return (
-              <span>{project.created ? dayjs(project.created).format('YYYY-MM-DD') : '无'}</span>
+              <span>
+                {project.created
+                  ? dayjs(project.created).format('YYYY-MM-DD')
+                  : '无'}
+              </span>
             )
           }
         }

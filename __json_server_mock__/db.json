@@ -1,5 +1,6 @@
 {
-  "users": [{
+  "users": [
+    {
       "id": 1,
       "name": "高修文"
     },
@@ -20,7 +21,8 @@
       "name": "郑华"
     }
   ],
-  "projects": [{
+  "projects": [
+    {
       "id": 1,
       "name": "骑手管理",
       "personId": 1,

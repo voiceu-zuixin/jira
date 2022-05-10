@@ -24,10 +24,16 @@ export default function AuthenticatedAapp() {
         <Router>
           <Routes>
             <Route path={'/projects'} element={<ProjectListScreen />} />
-            <Route path={'/projects/:projectId/*'} element={<ProjectScreen />} />
+            <Route
+              path={'/projects/:projectId/*'}
+              element={<ProjectScreen />}
+            />
             {/* <Navigate to={'/projects'} /> */}
             {/* 要用这种方式才能用上Navigate */}
-            <Route path="*" element={<Navigate to="/projects" replace={true} />} />
+            <Route
+              path="*"
+              element={<Navigate to="/projects" replace={true} />}
+            />
           </Routes>
         </Router>
       </Main>

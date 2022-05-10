@@ -6,7 +6,8 @@ type SelectProps = React.ComponentProps<typeof Select>
 
 // interface IdSelectProps extends SelectProps这样会让IdSelectProps内部定义的比如options与SelectProps
 // 内部的options相冲突，所以用Omit进行删除相同键名的类型
-interface IdSelectProps extends Omit<SelectProps, 'options' | 'value' | 'onChange'> {
+interface IdSelectProps
+  extends Omit<SelectProps, 'options' | 'value' | 'onChange'> {
   value: Raw | null | undefined
   onChange: (value?: number) => void
   defaultOptionName?: string
@@ -37,7 +38,9 @@ export default function IdSelect(props: IdSelectProps) {
     >
       {
         // 默认选项就是value为 0 的时候，在search-panel里面就是 负责人 的选项
-        defaultOptionName ? <Select.Option value={0}>{defaultOptionName}</Select.Option> : null
+        defaultOptionName ? (
+          <Select.Option value={0}>{defaultOptionName}</Select.Option>
+        ) : null
       }
       {options?.map((option) => (
         <Select.Option key={option.id} value={option.id}>

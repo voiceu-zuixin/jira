@@ -7,7 +7,11 @@ import { LongButton } from 'unauthenticated-app'
 import { useAsync } from 'utils/use-async'
 
 // 登录注册模块组件
-export default function RegisterScreen({ onError }: { onError: (error: Error) => void }) {
+export default function RegisterScreen({
+  onError
+}: {
+  onError: (error: Error) => void
+}) {
   // 此处就不用再给useAuth参数了，内部封装了，这样就能直接拿到login，user等参数了
   const { register } = useAuth()
 
@@ -39,15 +43,24 @@ export default function RegisterScreen({ onError }: { onError: (error: Error) =>
   // 页面
   return (
     <Form onFinish={handleSubmit}>
-      <Form.Item name={'username'} rules={[{ required: true, message: '请输入用户名' }]}>
+      <Form.Item
+        name={'username'}
+        rules={[{ required: true, message: '请输入用户名' }]}
+      >
         <Input placeholder="用户名" type="text" name="" id={'username'} />
       </Form.Item>
 
-      <Form.Item name={'password'} rules={[{ required: true, message: '请输入密码' }]}>
+      <Form.Item
+        name={'password'}
+        rules={[{ required: true, message: '请输入密码' }]}
+      >
         <Input placeholder="密码" type="text" name="" id={'password'} />
       </Form.Item>
 
-      <Form.Item name={'cpassword'} rules={[{ required: true, message: '请确认密码' }]}>
+      <Form.Item
+        name={'cpassword'}
+        rules={[{ required: true, message: '请确认密码' }]}
+      >
         <Input placeholder="确认密码" type="text" name="" id={'cpassword'} />
       </Form.Item>
 

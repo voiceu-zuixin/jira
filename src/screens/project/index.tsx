@@ -16,7 +16,12 @@ export default function ProjectScreen() {
         {/* <Navigate to={window.location.pathname + '/kanban'}/> */}
         <Route
           path="*"
-          element={<Navigate to={window.location.pathname + '/kanban'} replace={true} />}
+          element={
+            <Navigate
+              to={window.location.pathname + '/kanban'}
+              replace={true}
+            />
+          }
         />
       </Routes>
     </div>

@@ -3,7 +3,8 @@ import { useEffect, useRef, useState } from 'react'
 // 判断是0还是undefined或者null，只有后两者才是真的false
 export const isFalsy = (value: unknown) => (value === 0 ? false : !value)
 
-export const isVoid = (value: unknown) => value === undefined || value === null || value === ''
+export const isVoid = (value: unknown) =>
+  value === undefined || value === null || value === ''
 
 // 删除空属性
 export const cleanObject = (object: { [key: string]: unknown }) => {
@@ -62,7 +63,10 @@ export const useDebounce = <V>(value: V, delay?: number) => {
 }
 
 // 改变html的title
-export const useDocumentTitle = (title: string, keepOnUnmount: boolean = true) => {
+export const useDocumentTitle = (
+  title: string,
+  keepOnUnmount: boolean = true
+) => {
   // 记录旧title，useEffect空数组依赖的时候用这种方式
   // const oldTitle = document.title
 

@@ -12,7 +12,8 @@ export const useProjects = (param?: Partial<Project>) => {
   // 导入useAsync，   isLoading本来就有
   const { run, ...result } = useAsync<Project[]>()
 
-  const fetchProjects = () => client('projects', { data: cleanObject(param || {}) })
+  const fetchProjects = () =>
+    client('projects', { data: cleanObject(param || {}) })
 
   // param改变就会触发的useEffect
   useEffect(() => {

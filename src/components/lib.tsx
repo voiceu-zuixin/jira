@@ -18,7 +18,11 @@ export const Row = styled.div<{
     margin-bottom: 0 !important;
     margin-right: ${(props) =>
       //注意，这里加了一个gap属性，就需要在前面给Row的类型上加上去
-      typeof props.gap === 'number' ? props.gap + 'rem' : props.gap ? '2rem' : undefined};
+      typeof props.gap === 'number'
+        ? props.gap + 'rem'
+        : props.gap
+        ? '2rem'
+        : undefined};
   }
 `
 

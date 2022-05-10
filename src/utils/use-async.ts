@@ -19,7 +19,10 @@ const defaultConfig = {
 }
 
 // 泛型可以看成是，D是类型的形参，就像函数一样
-export const useAsync = <D>(initialState?: State<D>, initialConfig?: typeof defaultConfig) => {
+export const useAsync = <D>(
+  initialState?: State<D>,
+  initialConfig?: typeof defaultConfig
+) => {
   const config = { ...defaultConfig, ...initialConfig }
   const [state, setState] = useState<State<D>>({
     ...defaultInitialState,
@@ -47,7 +50,10 @@ export const useAsync = <D>(initialState?: State<D>, initialConfig?: typeof defa
     })
 
   //用于触发异步请求，内部会调用setData或者setError
-  const run = (promise: Promise<D>, runConfig?: { retry: () => Promise<D> }) => {
+  const run = (
+    promise: Promise<D>,
+    runConfig?: { retry: () => Promise<D> }
+  ) => {
     // 如果不是Promise类型，就报错
     if (!promise || !promise.then) {
       throw new Error('请传入 Promise 类型数据')

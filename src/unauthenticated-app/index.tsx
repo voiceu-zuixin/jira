@@ -22,9 +22,15 @@ export const UnauthenticatedApp = () => {
       <ShadowCard>
         <Title>{isRegister ? '请注册' : '请登录'}</Title>
 
-        {error ? <Typography.Text type="danger">{error.message}</Typography.Text> : null}
+        {error ? (
+          <Typography.Text type="danger">{error.message}</Typography.Text>
+        ) : null}
 
-        {isRegister ? <RegisterScreen onError={setError} /> : <LoginScreen onError={setError} />}
+        {isRegister ? (
+          <RegisterScreen onError={setError} />
+        ) : (
+          <LoginScreen onError={setError} />
+        )}
         <Divider />
         <Button type={'link'} onClick={() => setIsRegister(!isRegister)}>
           {isRegister ? '已经有账号了？直接登录' : '没有账号？注册一个吧'}
@@ -67,7 +73,8 @@ const Background = styled.div`
   /* 背景图片不会随着页面滑动而一起滑动 */
   background-attachment: fixed;
   background-position: left bottom, right bottom;
-  background-size: calc(((100vw-40rem) / 2)-3.2rem), calc(((100vw-40rem) / 2)-3.2rem) cover;
+  background-size: calc(((100vw-40rem) / 2)-3.2rem),
+    calc(((100vw-40rem) / 2)-3.2rem) cover;
   background-image: url(${left}), url(${right});
 `
 

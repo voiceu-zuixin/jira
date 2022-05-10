@@ -9,7 +9,11 @@ import { LongButton } from 'unauthenticated-app'
 import { useAsync } from 'utils/use-async'
 
 // 登录注册模块组件
-export default function LoginScreen({ onError }: { onError: (error: Error) => void }) {
+export default function LoginScreen({
+  onError
+}: {
+  onError: (error: Error) => void
+}) {
   // 此处就不用再给useAuth参数了，内部封装了，这样就能直接拿到login，user等参数了
   const { login } = useAuth()
 
@@ -17,7 +21,10 @@ export default function LoginScreen({ onError }: { onError: (error: Error) => vo
   const { run, isLoading } = useAsync(undefined, { throwOnError: true })
 
   // 处理提交的方法
-  const handleSubmit = async (values: { username: string; password: string }) => {
+  const handleSubmit = async (values: {
+    username: string
+    password: string
+  }) => {
     // 调用login方法，login方法应该由src/context下的index中导入，封装到useAuth里了
     try {
       await run(login(values))
@@ -29,11 +36,17 @@ export default function LoginScreen({ onError }: { onError: (error: Error) => vo
   // 页面
   return (
     <Form onFinish={handleSubmit}>
-      <Form.Item name={'username'} rules={[{ required: true, message: '请输入用户名' }]}>
+      <Form.Item
+        name={'username'}
+        rules={[{ required: true, message: '请输入用户名' }]}
+      >
         <Input placeholder="用户名" type="text" name="" id={'username'} />
       </Form.Item>
 
-      <Form.Item name={'password'} rules={[{ required: true, message: '请输入密码' }]}>
+      <Form.Item
+        name={'password'}
+        rules={[{ required: true, message: '请输入密码' }]}
+      >
         <Input placeholder="密码" type="text" name="" id={'password'} />
       </Form.Item>
 

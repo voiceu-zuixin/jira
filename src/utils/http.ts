@@ -33,26 +33,28 @@ export const http = async (
   }
 
   // 为什么这里是window.fetch，而不是直接fetch
-  return window.fetch(`${apiUrl}/${endpoint}`, config).then(async (responce) => {
-    //  如果是401，那么就是 A token must be provided  要登出
-    if (responce.status === 401) {
-      // 登出
-      await auth.logout()
-      // 刷新页面
-      window.location.reload()
-      // 返回一个message
-      return Promise.reject({ message: '请重新登录' })
-    }
+  return window
+    .fetch(`${apiUrl}/${endpoint}`, config)
+    .then(async (responce) => {
+      //  如果是401，那么就是 A token must be provided  要登出
+      if (responce.status === 401) {
+        // 登出
+        await auth.logout()
+        // 刷新页面
+        window.location.reload()
+        // 返回一个message
+        return Promise.reject({ message: '请重新登录' })
+      }
 
-    const data = await responce.json()
-    if (responce.ok) {
-      return data
-    } else {
-      // fetch API不会自动抛出异常，比如401,500状态码这些，所以需要手动抛出
-      // axios会自动捕获异常，与fetch不一样
-      return Promise.reject(data)
-    }
-  })
+      const data = await responce.json()
+      if (responce.ok) {
+        return data
+      } else {
+        // fetch API不会自动抛出异常，比如401,500状态码这些，所以需要手动抛出
+        // axios会自动捕获异常，与fetch不一样
+        return Promise.reject(data)
+      }
+    })
 }
 
 // 自动携带token，传入http请求中，返回一个函数，该函数运行后会返回fetch请求的结果

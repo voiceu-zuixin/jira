@@ -70,4 +70,5 @@ export const register = (data: { username: string; password: string }) => {
 }
 
 // 退出，就是把auth字段删除，async变成一个异步函数，返回值是promise对象
-export const logout = async () => window.localStorage.removeItem(localStorageKey)
+export const logout = async () =>
+  window.localStorage.removeItem(localStorageKey)
