@@ -18,6 +18,7 @@ export interface Project {
 
 interface ListProps extends TableProps<Project> {
   users: User[]
+  refresh?: () => void
 }
 
 export const List = ({ users, ...props }: ListProps) => {
@@ -25,7 +26,8 @@ export const List = ({ users, ...props }: ListProps) => {
   const { mutate } = useEditProject()
 
   // 用柯里化来改造不同时机才能获取参数的函数
-  const pinProject = (id: number) => (pin: boolean) => mutate({ id, pin })
+  // 通过then来让点击收藏后自动刷新页面
+  const pinProject = (id: number) => (pin: boolean) => mutate({ id, pin }).then(props.refresh)
 
   return (
     <Table

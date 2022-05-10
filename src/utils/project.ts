@@ -12,10 +12,14 @@ export const useProjects = (param?: Partial<Project>) => {
   // 导入useAsync，   isLoading本来就有
   const { run, ...result } = useAsync<Project[]>()
 
+  const fetchProjects = () => client('projects', { data: cleanObject(param || {}) })
+
   // param改变就会触发的useEffect
   useEffect(() => {
     // 为了让异步请求尚未返回的时候有loading效果
-    run(client('projects', { data: cleanObject(param || {}) }))
+    run(fetchProjects(), {
+      retry: fetchProjects
+    })
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [param])

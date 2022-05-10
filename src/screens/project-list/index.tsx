@@ -21,7 +21,7 @@ export const ProjectListScreen = () => {
   const debouncedParam = useDebounce(param, 300)
 
   // 导入useProjects，内部封装了useAsync，返回值是可以直接用
-  const { isLoading, error, data: list } = useProjects(debouncedParam)
+  const { isLoading, error, data: list, retry } = useProjects(debouncedParam)
 
   // 导入useUsers
   const { data: users } = useUser()
@@ -36,7 +36,7 @@ export const ProjectListScreen = () => {
       {/* 如果异步请求出错了，就渲染message */}
       {error ? <Typography.Text type={'danger'}>{error.message}</Typography.Text> : null}
 
-      <List loading={isLoading} users={users || []} dataSource={list || []} />
+      <List refresh={retry} loading={isLoading} users={users || []} dataSource={list || []} />
     </Container>
   )
 }
