@@ -3,6 +3,8 @@ import { Table, TableProps } from 'antd'
 import { User } from 'screens/project-list/search-panel'
 import dayjs from 'dayjs'
 import { Link } from 'react-router-dom'
+import { Pin } from 'components/pin'
+import { useEditProject } from 'utils/project'
 
 // TODO 把所有ID都改成number类型
 export interface Project {
@@ -19,12 +21,32 @@ interface ListProps extends TableProps<Project> {
 }
 
 export const List = ({ users, ...props }: ListProps) => {
+  // 拿到mutate，然后使用
+  const { mutate } = useEditProject()
+
+  // 用柯里化来改造不同时机才能获取参数的函数
+  const pinProject = (id: number) => (pin: boolean) => mutate({ id, pin })
+
   return (
     <Table
       // Table组件必须要有不同的key，这里暂时写一个随机的key函数
       rowKey={'id'}
       pagination={false}
       columns={[
+        {
+          title: <Pin checked={true} disabled={true} />,
+          render(project) {
+            // 当onCheckedChange时，要向服务器发送改变pin的请求
+            return (
+              <Pin
+                checked={project.pin}
+                // 自己定义的函数，为什么知道传入的参数就是pin
+                // 因为这个传进去，是作用到Rate的onChange里的，而这里的pin是我们主动传入的
+                onCheckedChange={pinProject(project.id)}
+              />
+            )
+          }
+        },
         {
           title: '名称',
           // dataIndex: 'name',

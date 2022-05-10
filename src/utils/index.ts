@@ -1,5 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
-import { useUrlQueryParam } from './url'
+import { useEffect, useRef, useState } from 'react'
 
 // 判断是0还是undefined或者null，只有后两者才是真的false
 export const isFalsy = (value: unknown) => (value === 0 ? false : !value)
@@ -90,31 +89,3 @@ export const useDocumentTitle = (title: string, keepOnUnmount: boolean = true) =
 // 这里一刷新就到了loaclhost:3000，然后会bootstrapUser，查询当前是否登录，进行渲染登录还是不登录的页面
 // 然后加入已登录，就进去navigate，跳转到 '/projects'的路由下了
 export const resetRoute = () => (window.location.href = window.location.origin)
-
-// 用于search-panel等地方，获取url的表单数据或者表单数据同步到url
-// 项目列表搜索的参数
-export const useProjectSearchParams = () => {
-  // 初始化param，用于一开始的输入框为空白,在子组件里输入后,onChange会触发setParam,
-  // 并进行更新param,然后再次传给子组件,进行渲染,保留在输入框
-
-  // 从url中获取param，这种解构是按顺序来的，经过解构出来的param是通过url查询后形成的对象
-  // 比如{name: '骑手', personId: '2'}
-  // 当SearchPanel的value改变的时候发生onChange，调用setParam，
-  // setParam内部会把param再同步的更新到url上，
-  const [param, setParam] = useUrlQueryParam(['name', 'personId'])
-
-  // 但是useUrlQueryParam从url上读取下来的param是string类型，希望是得到number类型
-  return [
-    // 同样需要useMemo来解决，每次都会解构然后变成新对象
-    useMemo(
-      () => ({
-        // 解构param，把string类型的personId改成number或者是undefined，覆盖string类型的原数据
-        ...param,
-        // 覆盖，不想要一个为0的id，就给一个undefined
-        personId: Number(param.personId) || undefined
-      }),
-      [param]
-    ),
-    setParam
-  ] as const
-}

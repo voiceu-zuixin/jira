@@ -1,9 +1,9 @@
 import { List } from './list'
 import { SearchPanel } from './search-panel'
-import { useDebounce, useDocumentTitle, useProjectSearchParams } from 'utils'
+import { useDebounce, useDocumentTitle } from 'utils'
 import styled from '@emotion/styled'
 import { Typography } from 'antd'
-import { useProjects } from 'utils/project'
+import { useProjects, useProjectSearchParams } from 'utils/project'
 import { useUser } from 'utils/user'
 
 // 引入apiUrl
