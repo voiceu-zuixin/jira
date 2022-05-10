@@ -41,7 +41,7 @@ export const useUrlQueryParam = <K extends string>(keys: K[]) => {
       // 然后把处理之后的对象进行更新，setSearchParams方法可以把参数更新到url中
       // return setSearchParams(o)
       setSearchParams(o) //感觉这里不用return也行
-      // setSearchParams({name: '骑手', personId: '3'}) //感觉这里不用return也行
+      // setSearchParams({name: '骑手', personId: '3'}) //可以把url变成http://localhost:3000/projects?name=骑手&personId=3
     }
   ] as const //解决数组类型不一致的时候，ts推导类型会不易理解
 }
