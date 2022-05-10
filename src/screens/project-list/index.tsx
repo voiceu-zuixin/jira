@@ -1,25 +1,21 @@
 import { List } from './list'
 import { SearchPanel } from './search-panel'
-import { useDebounce, useDocumentTitle } from 'utils'
+import { useDebounce, useDocumentTitle, useProjectSearchParams } from 'utils'
 import styled from '@emotion/styled'
 import { Typography } from 'antd'
 import { useProjects } from 'utils/project'
 import { useUser } from 'utils/user'
-import { useUrlQueryParam } from 'utils/url'
 
 // 引入apiUrl
 // const apiUrl = process.env.REACT_APP_API_URL
 
 // 开发模式下函数体是会多次调用的，而且次数是不确定的，hooks的初次渲染调用次数是两次
 export const ProjectListScreen = () => {
-  // 初始化param，用于一开始的输入框为空白,在子组件里输入后,onChange会触发setParam,
-  // 并进行更新param,然后再次传给子组件,进行渲染,保留在输入框
+  // 更改当前页面的title
+  useDocumentTitle('项目列表', false)
 
-  // 从url中获取param，这种解构是按顺序来的，经过解构出来的param是通过url查询后形成的对象
-  // 比如{name: '骑手', personId: '2'}
-  // 当SearchPanel的value改变的时候发生onChange，调用setParam，
-  // setParam内部会
-  const [param, setParam] = useUrlQueryParam(['name', 'personId'])
+  // 从useProjectSearchParams中拿到从url中的表单把string转换为number的param
+  const [param, setParam] = useProjectSearchParams()
 
   // 防抖
   const debouncedParam = useDebounce(param, 300)
@@ -29,8 +25,6 @@ export const ProjectListScreen = () => {
 
   // 导入useUsers
   const { data: users } = useUser()
-
-  useDocumentTitle('项目列表', false)
 
   return (
     <Container>

@@ -21,11 +21,14 @@ onChange只会回调 number|undefined 类型，当传入的不是0 的时候，�
 当选择默认类型的时候，onChange会回调undefined
 */
 export default function IdSelect(props: IdSelectProps) {
+  // 这里传入的options就是异步请求获取到的骑手等数据，value是为在前端手动选择的请求数据
   const { value, onChange, defaultOptionName, options, ...restProps } = props
 
   return (
     <Select
-      value={toNumber(value)}
+      //当网络慢的时候，url是有选择的，但是数据还没回来，这个时候应该显示默认的数据，而不是url的表单数字
+      // 所以给一个0，就会显示defaultOptionName
+      value={options?.length ? toNumber(value) : 0}
       // onChange(toNumber(value) || undefined) ，当toNumber(value)为0 的时候就看后一个参数了，所以其结果就是undefined
       // 即是onChange(undefined)
       onChange={(value) => onChange(toNumber(value) || undefined)}
@@ -33,7 +36,7 @@ export default function IdSelect(props: IdSelectProps) {
       {...restProps}
     >
       {
-        // 默认选项就是value为0 的时候
+        // 默认选项就是value为 0 的时候，在search-panel里面就是 负责人 的选项
         defaultOptionName ? <Select.Option value={0}>{defaultOptionName}</Select.Option> : null
       }
       {options?.map((option) => (

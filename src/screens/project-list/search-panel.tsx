@@ -1,8 +1,10 @@
-import { Form, Input, Select } from 'antd'
+import { Form, Input } from 'antd'
+import UserSelect from 'components/user-select'
+import { Project } from './list'
 
 // list组件也要用，所以还需要导出User
 export interface User {
-  id: string
+  id: number
   name: string
   email: string
   title: string
@@ -12,10 +14,9 @@ export interface User {
 
 interface SearchPanelProps {
   users: User[]
-  param: {
-    name: string
-    personId: string
-  }
+
+  //在Project选取'name' | 'personId'的类型，然后再Partial之后，这个'name' | 'personId'可以是原类型，也可以是undefined
+  param: Partial<Pick<Project, 'name' | 'personId'>>
 
   setParam: (param: SearchPanelProps['param']) => void
 }
@@ -34,17 +35,13 @@ export const SearchPanel = ({ users, param, setParam }: SearchPanelProps) => {
         />
       </Form.Item>
       <Form.Item>
-        <Select
+        {/*  UserSelect 内部会实现用useUser获取users等数据，然后渲染搜索框的下拉列表数据，
+            只需要把value这些，手动选择的数据传入即可  */}
+        <UserSelect
+          defaultOptionName="负责人"
           value={param.personId}
           onChange={(value) => setParam({ ...param, personId: value })}
-        >
-          <Select.Option value={''}>负责人</Select.Option>
-          {users.map((user) => (
-            <Select.Option key={user.id} value={String(user.id)}>
-              {user.name}
-            </Select.Option>
-          ))}
-        </Select>
+        ></UserSelect>
       </Form.Item>
     </Form>
   )
