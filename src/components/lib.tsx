@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { Spin, Typography } from 'antd'
+import { Button, Spin, Typography } from 'antd'
 import { DevTools } from 'jira-dev-tool'
 
 export const Row = styled.div<{
@@ -45,3 +45,8 @@ export const FullPageErrorFallback = ({ error }: { error: Error | null }) => (
     <Typography.Text type={'danger'}>{error?.message}</Typography.Text>
   </FullPage>
 )
+
+// ButtonNoPadding就是改了样式的antd的Button
+export const ButtonNoPadding = styled(Button)`
+  padding: 0;
+`

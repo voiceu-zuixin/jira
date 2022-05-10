@@ -1,4 +1,4 @@
-import { Drawer } from 'antd'
+import { Button, Drawer } from 'antd'
 
 export default function ProjectModal(props: {
   projectModalOpen: boolean
@@ -11,6 +11,7 @@ export default function ProjectModal(props: {
       width={'100%'}
     >
       <h1>ProjectModal</h1>
+      <Button onClick={props.onClose}>关闭</Button>
     </Drawer>
   )
 }
