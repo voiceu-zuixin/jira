@@ -1,5 +1,5 @@
 // 引入User类型
-import { Dropdown, Menu, Table, TableProps } from 'antd'
+import { Dropdown, Menu, MenuProps, Table, TableProps } from 'antd'
 import { User } from 'screens/project-list/search-panel'
 import dayjs from 'dayjs'
 import { Link } from 'react-router-dom'
@@ -32,6 +32,13 @@ export const List = ({ users, ...props }: ListProps) => {
   const pinProject = (id: number) => (pin: boolean) =>
     mutate({ id, pin }).then(props.refresh)
 
+  // antd4.20.0开始已经舍弃了Menu之前的写法，现在要写items,具体看https://ant.design/components/menu-cn/
+  const items: MenuProps['items'] = [
+    {
+      label: props.projectButton,
+      key: 'edit'
+    }
+  ]
   return (
     <Table
       // Table组件必须要有不同的key，这里暂时写一个随机的key函数
@@ -97,15 +104,9 @@ export const List = ({ users, ...props }: ListProps) => {
         {
           // 编辑栏，用于edit，也有创建项目等
           title: '操作',
-          render(project) {
+          render() {
             return (
-              <Dropdown
-                overlay={
-                  <Menu>
-                    <Menu.Item key={'edit'}>{props.projectButton}</Menu.Item>
-                  </Menu>
-                }
-              >
+              <Dropdown overlay={<Menu items={items}></Menu>}>
                 <ButtonNoPadding type={'link'}>...</ButtonNoPadding>
               </Dropdown>
             )

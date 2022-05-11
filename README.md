@@ -128,6 +128,10 @@ issue 地址（已经被关闭）：https://github.com/facebook/react/issues/244
 - 状态更新函数 (即 setState 的第一个参数）
 - 函数组件通过使用 **useState**，useMemo 或者 useReducer
 
+**useMemo 计算结果是 return 回来的值，通常用于缓存计算结果的值**
+
+**useCallback 计算结果是一个函数，通常用于缓存函数**
+
 以上总结了为何要 render 两次的原因，具体记录在博客帖子里，链接如下，
 
 https://juejin.cn/post/7092696529105846303

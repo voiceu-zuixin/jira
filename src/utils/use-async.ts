@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useMountedRef } from 'utils'
 
 interface State<D> {
   data: D | null
@@ -18,6 +19,7 @@ const defaultConfig = {
   throwOnError: false
 }
 
+// useAsync 用于异步请求的时候，loading加载效果能呈现
 // 泛型可以看成是，D是类型的形参，就像函数一样
 export const useAsync = <D>(
   initialState?: State<D>,
@@ -28,6 +30,9 @@ export const useAsync = <D>(
     ...defaultInitialState,
     ...initialState
   })
+
+  // 获取mountedRef，获取到使用useAsync的当前组件的挂载状态
+  const mountedRef = useMountedRef()
 
   // useState不能直接传入函数，传进去的话会在初次渲染就直接被react调用，是惰性初始化
   // 要想保存一个函数进去，就再多包一层
@@ -72,8 +77,10 @@ export const useAsync = <D>(
     // 异步请求回来了
     return promise
       .then((data) => {
-        //如果是成功的，就setData
-        setData(data)
+        //如果是成功的，并且，当前的mountedRef是true的话，组件还在挂载就setData
+        // 这样可以阻止在已经卸载的组件上进行赋值，比如？暂时缺少例子，不知道是要干什么
+        if (mountedRef.current) setData(data)
+
         return data
       })
       .catch((error) => {

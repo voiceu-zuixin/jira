@@ -86,6 +86,8 @@ export const useDocumentTitle = (
     // eslint-disable-next-line react-hooks/exhaustive-deps
     // 如果不指定依赖，空数组[]，读到的就是最开始的旧title，这是利用了闭包原理，不理解的话，有可能会写出bug
     // 这样写的话，不利于别人读代码，而且react也会警告，所以最好还是写上依赖，那么就要有useRef来解决
+    // 简单来说，useRef就像一个储物箱，你可以随意存放任何东西，再次渲染时它会去储物箱找，createRef每次渲染都会返回一个新的引用，而useRef每次都会返回相同的引用。
+    // 比如引用数据类型的对象，每次函数运行都是一个新对象，用来useRef就能每次都找到同一个对象
   }, [keepOnUnmount, oldTitle])
 }
 
@@ -93,3 +95,22 @@ export const useDocumentTitle = (
 // 这里一刷新就到了loaclhost:3000，然后会bootstrapUser，查询当前是否登录，进行渲染登录还是不登录的页面
 // 然后加入已登录，就进去navigate，跳转到 '/projects'的路由下了
 export const resetRoute = () => (window.location.href = window.location.origin)
+
+/**
+ * 返回组件的挂载状态，如果还没挂载或者已经卸载，返回false；反之，返回true
+ */
+export const useMountedRef = () => {
+  const mountedRef = useRef(false)
+
+  useEffect(() => {
+    // 挂载上去的时候就为true
+    mountedRef.current = true
+
+    // 组件卸载时，把mountedRef设置为false
+    return () => {
+      mountedRef.current = false
+    }
+  })
+
+  return mountedRef
+}
