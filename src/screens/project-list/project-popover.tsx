@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { List, Popover, Typography } from 'antd'
+import { Divider, List, Popover, Typography } from 'antd'
 import { useProjects } from 'utils/project'
 
 export default function ProjectPopover(props: { projectButton: JSX.Element }) {
@@ -19,6 +19,10 @@ export default function ProjectPopover(props: { projectButton: JSX.Element }) {
           </List.Item>
         ))}
       </List>
+
+      {/* 分割线 */}
+      <Divider />
+
       {/* 这里用来创建项目 */}
       {props.projectButton}
     </ContentContainer>

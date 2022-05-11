@@ -38,7 +38,21 @@ export default function AuthenticatedAapp() {
         <Router>
           {/*  react-router 6之后，路由都需要routes包裹起来 */}
           <Routes>
-            <Route path={'/projects'} element={<ProjectListScreen />} />
+            <Route
+              path={'/projects'}
+              element={
+                <ProjectListScreen
+                  projectButton={
+                    <ButtonNoPadding
+                      type={'link'}
+                      onClick={() => setProjectModalOpen(true)}
+                    >
+                      创建项目
+                    </ButtonNoPadding>
+                  }
+                />
+              }
+            />
             <Route
               path={'/projects/:projectId/*'}
               element={<ProjectScreen />}
@@ -62,6 +76,24 @@ export default function AuthenticatedAapp() {
 
 // PageHeader组件
 const PageHeader = (props: { projectButton: JSX.Element }) => {
+  return (
+    <Header between={true}>
+      <HeaderLeft gap={true}>
+        {/* ButtonNoPadding 继承了Button的所有属性 */}
+        <ButtonNoPadding type={'link'} onClick={resetRoute}>
+          <SoftwareLogo width={'18rem'} color={'rgb(38,132,255'} />
+        </ButtonNoPadding>
+        <ProjectPopover {...props} />
+        <span>用户</span>
+      </HeaderLeft>
+      <HeaderRight>
+        <User />
+      </HeaderRight>
+    </Header>
+  )
+}
+
+const User = () => {
   const { logout, user } = useAuth()
 
   // antd4.20.0开始已经舍弃了Menu之前的写法，现在要写items,具体看https://ant.design/components/menu-cn/
@@ -76,23 +108,11 @@ const PageHeader = (props: { projectButton: JSX.Element }) => {
     }
   ]
   return (
-    <Header between={true}>
-      <HeaderLeft gap={true}>
-        {/* ButtonNoPadding 继承了Button的所有属性 */}
-        <ButtonNoPadding type={'link'} onClick={resetRoute}>
-          <SoftwareLogo width={'18rem'} color={'rgb(38,132,255'} />
-        </ButtonNoPadding>
-        <ProjectPopover {...props} />
-        <span>用户</span>
-      </HeaderLeft>
-      <HeaderRight>
-        <Dropdown overlay={<Menu items={items}></Menu>}>
-          <Button type={'link'} onClick={(e) => e.preventDefault()}>
-            Hi, {user?.name}
-          </Button>
-        </Dropdown>
-      </HeaderRight>
-    </Header>
+    <Dropdown overlay={<Menu items={items}></Menu>}>
+      <Button type={'link'} onClick={(e) => e.preventDefault()}>
+        Hi, {user?.name}
+      </Button>
+    </Dropdown>
   )
 }
 

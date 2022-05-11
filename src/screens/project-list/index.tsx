@@ -5,12 +5,13 @@ import styled from '@emotion/styled'
 import { Typography } from 'antd'
 import { useProjects, useProjectSearchParams } from 'utils/project'
 import { useUser } from 'utils/user'
+import { Row } from 'components/lib'
 
 // 引入apiUrl
 // const apiUrl = process.env.REACT_APP_API_URL
 
 // 开发模式下函数体是会多次调用的，而且次数是不确定的，hooks的初次渲染调用次数是两次
-export const ProjectListScreen = () => {
+export const ProjectListScreen = (props: { projectButton: JSX.Element }) => {
   // 更改当前页面的title
   useDocumentTitle('项目列表', false)
 
@@ -28,7 +29,10 @@ export const ProjectListScreen = () => {
 
   return (
     <Container>
-      <h1>项目列表</h1>
+      <Row between={true}>
+        <h1>项目列表</h1>
+        {props.projectButton}
+      </Row>
 
       {/* 通过props传入state */}
       <SearchPanel users={users || []} param={param} setParam={setParam} />
@@ -39,6 +43,7 @@ export const ProjectListScreen = () => {
       ) : null}
 
       <List
+        projectButton={props.projectButton}
         refresh={retry}
         loading={isLoading}
         users={users || []}
