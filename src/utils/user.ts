@@ -15,9 +15,7 @@ export const useUser = (param?: Partial<User>) => {
   useEffect(() => {
     // 为了让异步请求尚未返回的时候有loading效果
     run(client('users', { data: cleanObject(param || {}) }))
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [param])
+  }, [param, run, client])
 
   return result
 }

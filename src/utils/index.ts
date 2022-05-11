@@ -114,3 +114,24 @@ export const useMountedRef = () => {
 
   return mountedRef
 }
+
+/**
+ * 传入一个对象，和（部分）键的集合，返回对应的对象中的键值对
+ * @param obj
+ * @param keys
+ */
+export const subset = <
+  O extends { [key in string]: unknown },
+  K extends keyof O
+>(
+  obj: O,
+  keys: K[]
+) => {
+  const filteredEntries = Object.entries(obj).filter(([key]) =>
+    keys.includes(key as K)
+  )
+
+  // Object.fromEntries() 方法把键值对列表转换为一个对象。
+  // https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Object/fromEntries
+  return Object.fromEntries(filteredEntries) as Pick<O, K>
+}

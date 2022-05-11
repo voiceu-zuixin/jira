@@ -1,11 +1,19 @@
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import { URLSearchParamsInit, useSearchParams } from 'react-router-dom'
-import { cleanObject } from 'utils'
+import { cleanObject, subset } from 'utils'
 
 // 返回页面url中，指定参数的值
 export const useUrlQueryParam = <K extends string>(keys: K[]) => {
   // useSearchParams是react-router-dom自带的，可以读取url的数据，但是要指定方法才能拿到内部数据
   const [searchParams, setSearchParams] = useSearchParams()
+
+  const [stateKeys] = useState(keys)
+
+  // 为什么可以
+  console.log(
+    'searchParams',
+    subset(Object.fromEntries(searchParams), stateKeys)
+  )
 
   // 测试Object.fromEntries(searchParams)是什么
   // console.log(Object.fromEntries(searchParams))
@@ -14,18 +22,26 @@ export const useUrlQueryParam = <K extends string>(keys: K[]) => {
     // 这里每次运行useUrlQueryParam，都会创建出一个新的值，所以需要用useMemo，会把第一个参数返回出去
     useMemo(
       () =>
-        keys.reduce((prev, key) => {
-          // [key] 表示key是变量，而不是key字符串
-          return { ...prev, [key]: searchParams.get(key) || '' }
-        }, {} as { [key in K]: string }), //[key in K] 就是[key : K]
+        // 把传入的字符串数组类型的keys，转换成对象
+        // keys.reduce((prev, key) => {
+        //   // [key] 表示key是变量，而不是key字符串
+        //   return { ...prev, [key]: searchParams.get(key) || '' }
+        // }, {} as { [key in K]: string }), //[key in K] 就是[key : K]
 
+        /* 
+        改用这种方式写，比如要查询的是 stateKeys = ['name', 'personId']
+        Object.fromEntries(searchParams)把searchParams变成一个对象
+        */
+        subset(Object.fromEntries(searchParams), stateKeys) as {
+          [key in K]: string
+        },
       /* 
         基本类型可以放到依赖里，组件状态state可以放到依赖里
-        非组件状态的对象，不可以放进去，会一直重复渲染
-      */
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-      [searchParams]
+        非组件状态的对象，不可以放进去，会一直重复渲染，所以要用useMemo
+        */
+      [searchParams, stateKeys]
     ),
+
     // 后面有可能会传入数组，所以先用unknown类型
     // 这里用到了迭代器iterator，
     (params: Partial<{ [key in K]: unknown }>) => {

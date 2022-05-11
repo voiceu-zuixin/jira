@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from 'react'
+import { useCallback, useEffect, useMemo } from 'react'
 import { cleanObject } from 'utils'
 import { useHttp } from './http'
 import { useAsync } from './use-async'
@@ -12,9 +12,10 @@ export const useProjects = (param?: Partial<Project>) => {
   // 导入useAsync，   isLoading本来就有
   const { run, ...result } = useAsync<Project[]>()
 
-  const fetchProjects = () => {
+  // 每一次运行函数都是一个新的fetchProjects，所以需要useCallback
+  const fetchProjects = useCallback(() => {
     return client('projects', { data: cleanObject(param || {}) })
-  }
+  }, [param, client])
 
   // param改变就会触发的useEffect
   useEffect(() => {
@@ -22,9 +23,7 @@ export const useProjects = (param?: Partial<Project>) => {
     run(fetchProjects(), {
       retry: fetchProjects
     })
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [param])
+  }, [param, run, fetchProjects])
 
   return result
 }
