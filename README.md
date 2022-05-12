@@ -180,6 +180,8 @@ useEffect，空数组的时候会报警告，配置下面的到 eslintConfig
 
 用 useCallback，把所有函数都包起来，这样都不会每次运行组件函数就创建新的函数
 
+useCallback 返回一个 memoized 回调函数。useCallback(fn, deps) 相当于 useMemo(() => fn, deps)
+
 ### 合并状态，改进 useUndo
 
 ### 用 useReducer 改写 useUndo
