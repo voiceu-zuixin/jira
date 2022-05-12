@@ -127,6 +127,8 @@ export const subset = <
   obj: O,
   keys: K[]
 ) => {
+  // Object.entries()方法返回一个给定对象自身可枚举属性的键值对数组，其排列与使用
+  // https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Object/entries
   const filteredEntries = Object.entries(obj).filter(([key]) =>
     keys.includes(key as K)
   )

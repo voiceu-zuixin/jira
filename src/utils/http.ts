@@ -63,6 +63,7 @@ export const useHttp = () => {
   const { user } = useAuth()
   // 以下函数跟http的类型是一样的，除了都抽离出来，还有这一种写法
   // return ([endpoint, config]: [string, Config]) => http(endpoint, { ...config, token: user?.token })
+  // 用useCallback保存函数
   return useCallback(
     (...[endpoint, config]: Parameters<typeof http>) =>
       http(endpoint, { ...config, token: user?.token }),

@@ -5,18 +5,13 @@ import { cleanObject, subset } from 'utils'
 // 返回页面url中，指定参数的值
 export const useUrlQueryParam = <K extends string>(keys: K[]) => {
   // useSearchParams是react-router-dom自带的，可以读取url的数据，但是要指定方法才能拿到内部数据
+  // 比如searchParams.name 是不行的，可以通过searchParams.get('name')来获取，
+  // 但是searchParams这个对象在有url数据的时候，是可见的，比如{personId: '1', name: '骑手'} ，只是直接searchParams.name取不到
+  // 所以通过Object.fromEntries(searchParams)等一系列的方法，把值取出来，变成一个可用的对象，
+  // 也可以用useMemo里面最开始的keys.reduce方法
   const [searchParams, setSearchParams] = useSearchParams()
 
   const [stateKeys] = useState(keys)
-
-  // 为什么可以
-  console.log(
-    'searchParams',
-    subset(Object.fromEntries(searchParams), stateKeys)
-  )
-
-  // 测试Object.fromEntries(searchParams)是什么
-  // console.log(Object.fromEntries(searchParams))
 
   return [
     // 这里每次运行useUrlQueryParam，都会创建出一个新的值，所以需要用useMemo，会把第一个参数返回出去
@@ -31,6 +26,7 @@ export const useUrlQueryParam = <K extends string>(keys: K[]) => {
         /* 
         改用这种方式写，比如要查询的是 stateKeys = ['name', 'personId']
         Object.fromEntries(searchParams)把searchParams变成一个对象
+        subset把该对象过滤变成只含stateKeys中字符串键的对象
         */
         subset(Object.fromEntries(searchParams), stateKeys) as {
           [key in K]: string
