@@ -83,9 +83,11 @@ const undoReducer = <T>(state: State<T>, action: Action<T>) => {
         future: []
       }
     }
-  }
 
-  // return state
+    // 默认返回state
+    default:
+      return state
+  }
 }
 
 // undo：撤销相对于ctrl + z  //  redo：撤销之后恢复 ctrl + y
