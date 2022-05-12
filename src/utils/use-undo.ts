@@ -17,7 +17,7 @@ export const useUndo = <T>(initialPresent: T) => {
   // past数组有内容的时候，可用撤销到past状态
   const canUndo = state.past.length !== 0
 
-  // past数组有内容的时候，可用恢复到future状态
+  // future数组有内容的时候，可用恢复到future状态
   const canRedo = state.future.length !== 0
 
   // 用useCallback包裹函数，以防每次都是新函数
