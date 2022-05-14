@@ -1,8 +1,11 @@
 import styled from '@emotion/styled'
 import { Divider, List, Popover, Typography } from 'antd'
-import { useProjects } from 'utils/project'
+import { ButtonNoPadding } from 'components/lib'
+import { useProjects, useProjectsMoal } from 'utils/project'
 
-export default function ProjectPopover(props: { projectButton: JSX.Element }) {
+export default function ProjectPopover() {
+  const { open } = useProjectsMoal()
+
   // 从useProjects中获取点星星后收藏的item，但是目前还没有实现点击收藏后实时刷新到下拉列表里
   // eslint-disable-next-line
   const { data: projects, isLoading } = useProjects()
@@ -24,7 +27,9 @@ export default function ProjectPopover(props: { projectButton: JSX.Element }) {
       <Divider />
 
       {/* 这里用来创建项目 */}
-      {props.projectButton}
+      <ButtonNoPadding onClick={open} type={'link'}>
+        创建项目
+      </ButtonNoPadding>
     </ContentContainer>
   )
 

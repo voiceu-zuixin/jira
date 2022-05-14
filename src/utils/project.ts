@@ -56,6 +56,33 @@ export const useProjectSearchParams = () => {
   ] as const
 }
 
+// Modal的全局状态管理器
+export const useProjectsMoal = () => {
+  const [{ projectCreate }, setProjectModalOpen] = useUrlQueryParam([
+    'projectCreate'
+  ])
+
+  const open = () => setProjectModalOpen({ projectCreate: true })
+  // 为了让回退不带上 http://localhost:3000/projects?projectCreate=false 而是直接没有后缀
+  // 用undefined 不用false，false会转换成字符串
+  const close = () => setProjectModalOpen({ projectCreate: undefined })
+
+  /* 
+  返回tuple，元组（数组）的话，在后面调用的时候，比如const [x,xx,xxx] = useProjectsMoal()
+  可以直接改名，但是是按照顺序来的，建议return的数据3个以内的用元组
+
+  如果三个以上，建议返回对象，这样在调用的时候，const {projectCreate,open,close} = useProjectsMoal()
+  就不能直接改名，但是顺序可以改变，因为读的是键名，可以通过冒号起别名，比如
+  const {projectCreate : create ,open,close} = useProjectsMoal() 
+  */
+  return {
+    // url上读取下来的都是字符串
+    projectCreateOpen: projectCreate === 'true',
+    open,
+    close
+  }
+}
+
 // 这里不要在参数里写要传入，因为这个函数如果写了就是要被用到onCheckedChange内部，
 // 而hook是不能被当做普通函数的回调函数的
 // 所以需要的pin的参数，直接用异步请求获取，曲线救国

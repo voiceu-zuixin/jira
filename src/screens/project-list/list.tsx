@@ -4,7 +4,7 @@ import { User } from 'screens/project-list/search-panel'
 import dayjs from 'dayjs'
 import { Link } from 'react-router-dom'
 import { Pin } from 'components/pin'
-import { useEditProject } from 'utils/project'
+import { useEditProject, useProjectsMoal } from 'utils/project'
 import { ButtonNoPadding } from 'components/lib'
 
 // TODO 把所有ID都改成number类型
@@ -20,10 +20,12 @@ export interface Project {
 interface ListProps extends TableProps<Project> {
   users: User[]
   refresh?: () => void
-  projectButton: JSX.Element
+  // projectButton: JSX.Element
 }
 
 export const List = ({ users, ...props }: ListProps) => {
+  const { open } = useProjectsMoal()
+
   // 拿到mutate，然后使用
   const { mutate } = useEditProject()
 
@@ -35,7 +37,11 @@ export const List = ({ users, ...props }: ListProps) => {
   // antd4.20.0开始已经舍弃了Menu之前的写法，现在要写items,具体看https://ant.design/components/menu-cn/
   const items: MenuProps['items'] = [
     {
-      label: props.projectButton,
+      label: (
+        <ButtonNoPadding onClick={open} type={'link'}>
+          创建项目
+        </ButtonNoPadding>
+      ),
       key: 'edit'
     }
   ]
