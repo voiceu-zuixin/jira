@@ -189,3 +189,5 @@ useCallback 返回一个 memoized 回调函数。useCallback(fn, deps) 相当于
 ### 用 useReducer 改造 useAsync
 
 5.13 开始 第十节
+
+更新新版本的 React-dev-tool，StrictMode 中第二次重复渲染的 console 会变成灰色，这样便于检测
