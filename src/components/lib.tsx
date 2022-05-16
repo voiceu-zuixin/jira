@@ -42,9 +42,21 @@ export const FullPageLoading = () => (
 export const FullPageErrorFallback = ({ error }: { error: Error | null }) => (
   <FullPage>
     <DevTools />
-    <Typography.Text type={'danger'}>{error?.message}</Typography.Text>
+    <ErrorBox error={error} />
   </FullPage>
 )
+
+// 类型守卫 当value?.message条件为真的时候 value is Error，注意字符串的0也是true，而0和undefined则是false
+const isError = (value: any): value is Error => value?.message
+
+// 当整的是Error类型的时候，出现的组件
+export const ErrorBox = ({ error }: { error: unknown }) => {
+  // 当error为unknown的时候，不能在error上读取任何属性，加问号error?.message也不行，所以需要用到类型守卫
+  if (isError(error)) {
+    return <Typography.Text type={'danger'}>{error?.message}</Typography.Text>
+  }
+  return null
+}
 
 // ButtonNoPadding就是改了样式的antd的Button
 export const ButtonNoPadding = styled(Button)`

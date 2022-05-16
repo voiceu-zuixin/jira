@@ -2,14 +2,13 @@ import { List } from './list'
 import { SearchPanel } from './search-panel'
 import { useDebounce, useDocumentTitle } from 'utils'
 import styled from '@emotion/styled'
-import { Typography } from 'antd'
 import {
   useProjects,
   useProjectSearchParams,
   useProjectsMoal
 } from 'utils/project'
 import { useUser } from 'utils/user'
-import { ButtonNoPadding, Row } from 'components/lib'
+import { ButtonNoPadding, ErrorBox, Row } from 'components/lib'
 
 // 引入apiUrl
 // const apiUrl = process.env.REACT_APP_API_URL
@@ -28,7 +27,7 @@ export const ProjectListScreen = () => {
   const debouncedParam = useDebounce(param, 300)
 
   // 导入useProjects，内部封装了useAsync，返回值是可以直接用
-  const { isLoading, error, data: list, retry } = useProjects(debouncedParam)
+  const { isLoading, error, data: list } = useProjects(debouncedParam)
 
   // 导入useUsers
   const { data: users } = useUser()
@@ -47,12 +46,10 @@ export const ProjectListScreen = () => {
       <SearchPanel users={users || []} param={param} setParam={setParam} />
 
       {/* 如果异步请求出错了，就渲染message */}
-      {error ? (
-        <Typography.Text type={'danger'}>{error.message}</Typography.Text>
-      ) : null}
+      <ErrorBox error={error} />
 
       <List
-        refresh={retry}
+        // refresh={retry}
         loading={isLoading}
         users={users || []}
         dataSource={list || []}

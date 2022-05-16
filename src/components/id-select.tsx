@@ -8,8 +8,8 @@ type SelectProps = React.ComponentProps<typeof Select>
 // 内部的options相冲突，所以用Omit进行删除相同键名的类型
 interface IdSelectProps
   extends Omit<SelectProps, 'options' | 'value' | 'onChange'> {
-  value: Raw | null | undefined
-  onChange: (value?: number) => void
+  value?: Raw | null | undefined
+  onChange?: (value?: number) => void
   defaultOptionName?: string
   // 是一个{ name: string; id: number }对象类型的数组
   options?: { name: string; id: number }[]
@@ -32,7 +32,7 @@ export default function IdSelect(props: IdSelectProps) {
       value={options?.length ? toNumber(value) : 0}
       // onChange(toNumber(value) || undefined) ，当toNumber(value)为0 的时候就看后一个参数了，所以其结果就是undefined
       // 即是onChange(undefined)
-      onChange={(value) => onChange(toNumber(value) || undefined)}
+      onChange={(value) => onChange?.(toNumber(value) || undefined)}
       // 其余的Select自带的属性，或者使用者在父级组件透传下来的属性
       {...restProps}
     >

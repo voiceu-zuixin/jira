@@ -19,7 +19,7 @@ export interface Project {
 
 interface ListProps extends TableProps<Project> {
   users: User[]
-  refresh?: () => void
+  // refresh?: () => void
   // projectButton: JSX.Element
 }
 
@@ -29,22 +29,43 @@ export const List = ({ users, ...props }: ListProps) => {
   // 拿到mutate，然后使用
   const { mutate } = useEditProject()
 
-  // 用柯里化来改造不同时机才能获取参数的函数
-  // 通过then来让点击收藏后自动刷新页面
-  const pinProject = (id: number) => (pin: boolean) =>
-    mutate({ id, pin }).then(props.refresh)
+  // 用于编辑
+  const { startEdit } = useProjectsMoal()
+
+  const editProject = (id: number) => () => startEdit(id)
 
   // antd4.20.0开始已经舍弃了Menu之前的写法，现在要写items,具体看https://ant.design/components/menu-cn/
-  const items: MenuProps['items'] = [
-    {
-      label: (
-        <ButtonNoPadding onClick={open} type={'link'}>
-          创建项目
-        </ButtonNoPadding>
-      ),
-      key: 'edit'
-    }
-  ]
+  // 但是这样就无法把外部Menu的参数传给items了
+  // 因为新版的Menu无法让item得到父组件Menu的props，所以写一个函数，传入props，返回其绑定的item
+  const getItems = (project: Project) => {
+    const item: MenuProps['items'] = [
+      {
+        label: (
+          <ButtonNoPadding onClick={open} type={'link'}>
+            创建项目
+          </ButtonNoPadding>
+        ),
+        key: 'add'
+      },
+      {
+        label: '编辑',
+        onClick: editProject(project.id),
+        key: 'edit'
+      },
+      {
+        label: '删除',
+        key: 'delete'
+      }
+    ]
+    return item
+  }
+
+  // 用柯里化来改造不同时机才能获取参数的函数
+  // 通过then来让点击收藏后自动刷新页面
+  const pinProject = (id: number) => (pin: boolean) => mutate({ id, pin })
+  // 不用自动刷新了，用来useQuery，可以实现自动刷新，相对于缓存一样，还不带屏闪
+  // .then(props.refresh)
+
   return (
     <Table
       // Table组件必须要有不同的key，这里暂时写一个随机的key函数
@@ -110,9 +131,9 @@ export const List = ({ users, ...props }: ListProps) => {
         {
           // 编辑栏，用于edit，也有创建项目等
           title: '操作',
-          render() {
+          render(project) {
             return (
-              <Dropdown overlay={<Menu items={items}></Menu>}>
+              <Dropdown overlay={<Menu items={getItems(project)}></Menu>}>
                 <ButtonNoPadding type={'link'}>...</ButtonNoPadding>
               </Dropdown>
             )

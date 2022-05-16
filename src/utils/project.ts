@@ -1,31 +1,20 @@
-import { useCallback, useEffect, useMemo } from 'react'
-import { cleanObject } from 'utils'
+import { useMemo } from 'react'
 import { useHttp } from './http'
-import { useAsync } from './use-async'
 import { Project } from 'screens/project-list/list'
 import { useUrlQueryParam } from './url'
+import { useMutation, useQuery, useQueryClient } from 'react-query'
+import { useSearchParams } from 'react-router-dom'
 
 export const useProjects = (param?: Partial<Project>) => {
   // 使用useHttp，得到一个函数，用于替换之前的fetch操作，还可以自动携带token
   const client = useHttp()
 
-  // 导入useAsync，   isLoading本来就有
-  const { run, ...result } = useAsync<Project[]>()
+  // 用useQuery来代替useAsync
 
-  // 每一次运行函数都是一个新的fetchProjects，所以需要useCallback
-  const fetchProjects = useCallback(() => {
-    return client('projects', { data: cleanObject(param || {}) })
-  }, [param, client])
-
-  // param改变就会触发的useEffect
-  useEffect(() => {
-    // 为了让异步请求尚未返回的时候有loading效果
-    run(fetchProjects(), {
-      retry: fetchProjects
-    })
-  }, [param, run, fetchProjects])
-
-  return result
+  // 第一个参数是数组的时候，当里面的依赖变化的时候，useQuery就会被触发
+  return useQuery<Project[]>(['projects', param], () =>
+    client('projects', { data: param })
+  )
 }
 
 // 用于search-panel等地方，获取url的表单数据或者表单数据同步到url
@@ -58,14 +47,35 @@ export const useProjectSearchParams = () => {
 
 // Modal的全局状态管理器
 export const useProjectsMoal = () => {
+  // 判断现在是不是创建
   const [{ projectCreate }, setProjectModalOpen] = useUrlQueryParam([
     'projectCreate'
   ])
 
+  // 根据当前url判断是不是应该编辑
+  const [{ editingProjectId }, setEditingProjectId] = useUrlQueryParam([
+    'editingProjectId'
+  ])
+
+  // eslint-disable-next-line
+  const [_, setUrlParams] = useSearchParams()
+
+  const { data: editingProject, isLoading } = useProject(
+    Number(editingProjectId)
+  )
+
   const open = () => setProjectModalOpen({ projectCreate: true })
+
   // 为了让回退不带上 http://localhost:3000/projects?projectCreate=false 而是直接没有后缀
   // 用undefined 不用false，false会转换成字符串
-  const close = () => setProjectModalOpen({ projectCreate: undefined })
+  const close = () => {
+    // setProjectModalOpen({ projectCreate: undefined })
+    // setEditingProjectId({ editingProjectId: undefined })
+    setUrlParams({ projectCreate: '', editingProjectId: '' })
+  }
+
+  const startEdit = (id: number) =>
+    setEditingProjectId({ editingProjectId: id })
 
   /* 
   返回tuple，元组（数组）的话，在后面调用的时候，比如const [x,xx,xxx] = useProjectsMoal()
@@ -77,9 +87,12 @@ export const useProjectsMoal = () => {
   */
   return {
     // url上读取下来的都是字符串
-    projectCreateOpen: projectCreate === 'true',
+    projectModalOpen: projectCreate === 'true' || Boolean(editingProject),
     open,
-    close
+    close,
+    startEdit,
+    editingProject,
+    isLoading
   }
 }
 
@@ -87,32 +100,47 @@ export const useProjectsMoal = () => {
 // 而hook是不能被当做普通函数的回调函数的
 // 所以需要的pin的参数，直接用异步请求获取，曲线救国
 export const useEditProject = () => {
-  const { run, ...asyncResult } = useAsync()
   const client = useHttp()
-  const mutate = (params: Partial<Project>) => {
-    return run(
+  const queryClient = useQueryClient()
+  return useMutation(
+    (params: Partial<Project>) =>
       client(`projects/${params.id}`, {
         data: params,
         method: 'PATCH'
-      })
-    )
-  }
-
-  return { mutate, ...asyncResult }
+      }),
+    {
+      // 用于即时刷新，相对于retry
+      onSuccess: () => queryClient.invalidateQueries('projects')
+    }
+  )
 }
 
 // useAddProject
 export const useAddProject = () => {
-  const { run, ...asyncResult } = useAsync()
   const client = useHttp()
-  const mutate = (params: Partial<Project>) => {
-    return run(
-      client(`projects/${params.id}`, {
+  const queryClient = useQueryClient()
+  return useMutation(
+    (params: Partial<Project>) =>
+      client(`projects`, {
         data: params,
         method: 'POST'
-      })
-    )
-  }
+      }),
+    {
+      // 用于即时刷新，相对于retry
+      onSuccess: () => queryClient.invalidateQueries('projects')
+    }
+  )
+}
 
-  return { mutate, ...asyncResult }
+// 获取具体的project详情
+export const useProject = (id?: number) => {
+  const client = useHttp()
+  return useQuery<Project>(
+    ['project', { id }],
+    () => client(`projects/${id}`),
+    {
+      // 当id是undefined的时候，就不需要请求了
+      enabled: Boolean(id)
+    }
+  )
 }
