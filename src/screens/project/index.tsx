@@ -19,6 +19,7 @@ export default function ProjectScreen() {
           element={
             <Navigate
               to={window.location.pathname + '/kanban'}
+              // replace={true} 解决了回退无限循环的bug
               replace={true}
             />
           }

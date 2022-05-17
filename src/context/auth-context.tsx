@@ -14,11 +14,12 @@
 import React, { ReactNode } from 'react'
 // 因为auth-provider中有login与此模块的login重名，所以起一个别名auth，通过auth.login调用，其他同理
 import * as auth from 'utils/auth-provider'
-import { User } from 'screens/project-list/search-panel'
+import { User } from 'types/user'
 import { http } from 'utils/http'
 import { useMount } from 'utils'
 import { useAsync } from 'utils/use-async'
 import { FullPageErrorFallback, FullPageLoading } from 'components/lib'
+import { useQueryClient } from 'react-query'
 
 // 定义AuthForm类型
 interface AuthForm {
@@ -80,6 +81,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setData: setUser
   } = useAsync<User | null>()
 
+  const queryClient = useQueryClient()
+
   // login函数，传入form表单数据，类型是上方定义的接口AuthForm类型
   const login = (form: AuthForm) => {
     //将form传入auth.login()方法，期望得到一个成功的promise对象，结果是user
@@ -98,7 +101,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   // 退出，将user再次设置为null
   const logout = () => {
-    return auth.logout().then(() => setUser(null))
+    return auth.logout().then(() => {
+      setUser(null)
+      // 清空useQuery的缓存，以防下次注册新用户进来的时候，网络慢，会先展示上一个用户的信息
+      queryClient.clear()
+    })
   }
 
   // 每次刷新的时候都要根据存好的token获取当前的user，防止刷新后user状态就没了

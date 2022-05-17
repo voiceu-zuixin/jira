@@ -36,6 +36,12 @@ export default function ProjectModal() {
     })
   }
 
+  // 新建、重新打开的时候，清空里面的内容
+  const closeModal = () => {
+    form.resetFields()
+    close()
+  }
+
   useEffect(() => {
     form.setFieldsValue(editingProject)
   }, [editingProject, form])
@@ -43,7 +49,7 @@ export default function ProjectModal() {
   return (
     <Drawer
       forceRender={true}
-      onClose={close}
+      onClose={closeModal}
       visible={projectModalOpen}
       width={'100%'}
     >

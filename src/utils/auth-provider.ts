@@ -15,7 +15,7 @@ let storage = window.localStorage 可以得到整个数据库以下
 查：Storage.getItem(key: string): string | null
 */
 
-import { User } from 'screens/project-list/search-panel'
+import { User } from 'types/user'
 
 const apiUrl = process.env.REACT_APP_API_URL
 

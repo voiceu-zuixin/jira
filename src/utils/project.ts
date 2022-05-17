@@ -1,9 +1,8 @@
 import { useMemo } from 'react'
 import { useHttp } from './http'
-import { Project } from 'screens/project-list/list'
+import { Project } from 'types/project'
 import { useSetUrlSearchParam, useUrlQueryParam } from './url'
 import { QueryKey, useMutation, useQuery } from 'react-query'
-import { useSearchParams } from 'react-router-dom'
 import {
   useAddConfig,
   useDeleteConfig,
@@ -92,7 +91,7 @@ export const useProjectsMoal = () => {
   */
   return {
     // url上读取下来的都是字符串
-    projectModalOpen: projectCreate === 'true' || Boolean(editingProject),
+    projectModalOpen: projectCreate === 'true' || Boolean(editingProjectId),
     open,
     close,
     startEdit,
