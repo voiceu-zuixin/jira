@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 import { useHttp } from './http'
 import { Project } from 'screens/project-list/list'
-import { useUrlQueryParam } from './url'
+import { useSetUrlSearchParam, useUrlQueryParam } from './url'
 import { QueryKey, useMutation, useQuery } from 'react-query'
 import { useSearchParams } from 'react-router-dom'
 import {
@@ -63,7 +63,7 @@ export const useProjectsMoal = () => {
   ])
 
   // eslint-disable-next-line
-  const [_, setUrlParams] = useSearchParams()
+  const setUrlParams = useSetUrlSearchParam()
 
   const { data: editingProject, isLoading } = useProject(
     Number(editingProjectId)

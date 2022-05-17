@@ -9,7 +9,9 @@ export const useUrlQueryParam = <K extends string>(keys: K[]) => {
   // 但是searchParams这个对象在有url数据的时候，是可见的，比如{personId: '1', name: '骑手'} ，只是直接searchParams.name取不到
   // 所以通过Object.fromEntries(searchParams)等一系列的方法，把值取出来，变成一个可用的对象，
   // 也可以用useMemo里面最开始的keys.reduce方法
-  const [searchParams, setSearchParams] = useSearchParams()
+  const [searchParams] = useSearchParams()
+
+  const setSearchParams = useSetUrlSearchParam()
 
   const [stateKeys] = useState(keys)
 
@@ -41,19 +43,27 @@ export const useUrlQueryParam = <K extends string>(keys: K[]) => {
     // 后面有可能会传入数组，所以先用unknown类型
     // 这里用到了迭代器iterator，
     (params: Partial<{ [key in K]: unknown }>) => {
-      // 因为searchParams要拿到{name: '骑手', personId: '2'}的name，personId等属性，必须要通过get方法
-      // 本身的话是一个包含了其他方法的对象，通过Object.fromEntries(searchParams)就能得到{name: '骑手', personId: '2'}的形式的对象
-      // 处理传入的searchParams，Object.fromEntries方法把键值对列表转换为一个对象
-      // 然后用params替换该对象，再cleanObject
-      const o = cleanObject({
-        ...Object.fromEntries(searchParams),
-        ...params
-      }) as URLSearchParamsInit
-
-      // 然后把处理之后的对象进行更新，setSearchParams方法可以把参数更新到url中
-      // return setSearchParams(o)
-      setSearchParams(o) //感觉这里不用return也行
-      // setSearchParams({name: '骑手', personId: '3'}) //可以把url变成http://localhost:3000/projects?name=骑手&personId=3
+      return setSearchParams(params)
     }
   ] as const //解决数组类型不一致的时候，ts推导类型会不易理解
+}
+
+export const useSetUrlSearchParam = () => {
+  const [searchParams, setSearchParams] = useSearchParams()
+
+  return (params: { [key in string]: unknown }) => {
+    // 因为searchParams要拿到{name: '骑手', personId: '2'}的name，personId等属性，必须要通过get方法
+    // 本身的话是一个包含了其他方法的对象，通过Object.fromEntries(searchParams)就能得到{name: '骑手', personId: '2'}的形式的对象
+    // 处理传入的searchParams，Object.fromEntries方法把键值对列表转换为一个对象
+    // 然后用params替换该对象，再cleanObject
+    const o = cleanObject({
+      ...Object.fromEntries(searchParams),
+      ...params
+    }) as URLSearchParamsInit
+
+    // 然后把处理之后的对象进行更新，setSearchParams方法可以把参数更新到url中
+    // return setSearchParams(o)
+    setSearchParams(o) //感觉这里不用return也行
+    // setSearchParams({name: '骑手', personId: '3'}) //可以把url变成http://localhost:3000/projects?name=骑手&personId=3
+  }
 }
