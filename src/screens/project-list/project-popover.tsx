@@ -8,7 +8,7 @@ export default function ProjectPopover() {
 
   // 从useProjects中获取点星星后收藏的item，但是目前还没有实现点击收藏后实时刷新到下拉列表里
   // eslint-disable-next-line
-  const { data: projects, isLoading } = useProjects()
+  const { data: projects, refetch } = useProjects()
   const pinnedProjects = projects?.filter((project) => project.pin)
 
   const content = (
@@ -34,7 +34,7 @@ export default function ProjectPopover() {
   )
 
   return (
-    <Popover placement={'bottom'} content={content}>
+    <Popover onVisibleChange={()=>refetch()} placement={'bottom'} content={content}>
       <span>项目</span>
     </Popover>
   )
