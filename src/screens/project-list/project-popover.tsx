@@ -34,7 +34,12 @@ export default function ProjectPopover() {
   )
 
   return (
-    <Popover onVisibleChange={()=>refetch()} placement={'bottom'} content={content}>
+    <Popover
+      //当鼠标飘过去让他展示的时候，就重新请求，就可以达到实时更新的效果了
+      onVisibleChange={() => refetch()}
+      placement={'bottom'}
+      content={content}
+    >
       <span>项目</span>
     </Popover>
   )
