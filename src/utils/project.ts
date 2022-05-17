@@ -155,7 +155,10 @@ export const useProject = (id?: number) => {
   )
 }
 
+// 返回的就是queryKey的格式，['projects', {name:'xx' , personId:2}]
 export const useProjectsQueryKey = () => {
   const [params] = useProjectSearchParams()
+  // params是经过useMemo保存的对象，比如{name:'xx' , personId:2}
+  // console.log(params)
   return ['projects', params]
 }

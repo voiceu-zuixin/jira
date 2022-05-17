@@ -113,7 +113,7 @@ const More = ({ project }: { project: Project }) => {
 
   const editProject = (id: number) => () => startEdit(id)
 
-  // 解构之后重命名为deleteProject
+  // 解构之后重命名为deleteProject，useProjectsQueryKey()返回值是queryKey，并传入useDeleteProject
   const { mutate: deleteProject } = useDeleteProject(useProjectsQueryKey())
 
   const confirmDeleteProject = (id: number) => {

@@ -7,6 +7,7 @@ export const useConfig = (
   const queryClient = useQueryClient()
 
   return {
+    // 成功的时候的回调，queryClient.invalidateQueries使得匹配的查询失效并重新获取
     // 用于即时刷新，相对于retry
     onSuccess: () => queryClient.invalidateQueries(queryKey),
 
@@ -23,6 +24,7 @@ export const useConfig = (
 
       return { previousItems }
     },
+    
     // 当useMutation的请求发生错误的时候，就调用该函数
     // 逻辑上是useMutation一发生，会先调用onMutate，这个时候乐观更新，但是当响应返回来的时候发现请求失败了
     // 就应该把乐观更新提前响应的内容清空，回滚到之前的状态，此时就调用onError
