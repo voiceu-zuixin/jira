@@ -4,7 +4,12 @@ import { useForm } from 'antd/lib/form/Form'
 import { ErrorBox } from 'components/lib'
 import UserSelect from 'components/user-select'
 import { useEffect } from 'react'
-import { useAddProject, useEditProject, useProjectsMoal } from 'utils/project'
+import {
+  useAddProject,
+  useEditProject,
+  useProjectsMoal,
+  useProjectsQueryKey
+} from 'utils/project'
 
 export default function ProjectModal() {
   const { projectModalOpen, close, editingProject, isLoading } =
@@ -14,7 +19,11 @@ export default function ProjectModal() {
 
   // 判断当前是编辑还是新建
   const useMutateProject = editingProject ? useEditProject : useAddProject
-  const { mutateAsync, error, isLoading: mutateLoading } = useMutateProject()
+  const {
+    mutateAsync,
+    error,
+    isLoading: mutateLoading
+  } = useMutateProject(useProjectsQueryKey())
 
   // antd内置的hook
   const [form] = useForm()

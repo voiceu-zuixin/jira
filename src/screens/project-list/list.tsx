@@ -1,10 +1,15 @@
 // 引入User类型
-import { Dropdown, Menu, MenuProps, Table, TableProps } from 'antd'
+import { Dropdown, Menu, MenuProps, Modal, Table, TableProps } from 'antd'
 import { User } from 'screens/project-list/search-panel'
 import dayjs from 'dayjs'
 import { Link } from 'react-router-dom'
 import { Pin } from 'components/pin'
-import { useEditProject, useProjectsMoal } from 'utils/project'
+import {
+  useDeleteProject,
+  useEditProject,
+  useProjectsMoal,
+  useProjectsQueryKey
+} from 'utils/project'
 import { ButtonNoPadding } from 'components/lib'
 
 // TODO 把所有ID都改成number类型
@@ -24,46 +29,13 @@ interface ListProps extends TableProps<Project> {
 }
 
 export const List = ({ users, ...props }: ListProps) => {
-  const { open } = useProjectsMoal()
-
   // 拿到mutate，然后使用
-  const { mutate } = useEditProject()
-
-  // 用于编辑
-  const { startEdit } = useProjectsMoal()
-
-  const editProject = (id: number) => () => startEdit(id)
-
-  // antd4.20.0开始已经舍弃了Menu之前的写法，现在要写items,具体看https://ant.design/components/menu-cn/
-  // 但是这样就无法把外部Menu的参数传给items了
-  // 因为新版的Menu无法让item得到父组件Menu的props，所以写一个函数，传入props，返回其绑定的item
-  const getItems = (project: Project) => {
-    const item: MenuProps['items'] = [
-      {
-        label: (
-          <ButtonNoPadding onClick={open} type={'link'}>
-            创建项目
-          </ButtonNoPadding>
-        ),
-        key: 'add'
-      },
-      {
-        label: '编辑',
-        onClick: editProject(project.id),
-        key: 'edit'
-      },
-      {
-        label: '删除',
-        key: 'delete'
-      }
-    ]
-    return item
-  }
+  const { mutate } = useEditProject(useProjectsQueryKey())
 
   // 用柯里化来改造不同时机才能获取参数的函数
   // 通过then来让点击收藏后自动刷新页面
   const pinProject = (id: number) => (pin: boolean) => mutate({ id, pin })
-  // 不用自动刷新了，用来useQuery，可以实现自动刷新，相对于缓存一样，还不带屏闪
+  // 不用自动刷新了，用来useQuery，可以实现自动刷新，相当于缓存一样，还不带屏闪
   // .then(props.refresh)
 
   return (
@@ -132,16 +104,69 @@ export const List = ({ users, ...props }: ListProps) => {
           // 编辑栏，用于edit，也有创建项目等
           title: '操作',
           render(project) {
-            return (
-              <Dropdown overlay={<Menu items={getItems(project)}></Menu>}>
-                <ButtonNoPadding type={'link'}>...</ButtonNoPadding>
-              </Dropdown>
-            )
+            return <More project={project} />
           }
         }
       ]}
       // 这其中包含了剩余的属性，比如DataSource
       {...props}
     ></Table>
+  )
+}
+
+const More = ({ project }: { project: Project }) => {
+  // 用于新建
+  const { open } = useProjectsMoal()
+  // 用于编辑
+  const { startEdit } = useProjectsMoal()
+
+  const editProject = (id: number) => () => startEdit(id)
+
+  // 解构之后重命名为deleteProject
+  const { mutate: deleteProject } = useDeleteProject(useProjectsQueryKey())
+
+  const confirmDeleteProject = (id: number) => {
+    Modal.confirm({
+      title: '确定删除这个项目吗？',
+      content: '点击确定删除',
+      okText: '确定',
+      onOk() {
+        deleteProject({ id })
+      }
+    })
+  }
+
+  // antd4.20.0开始已经舍弃了Menu之前的写法，现在要写items,具体看https://ant.design/components/menu-cn/
+  // 但是这样就无法把外部Menu的参数传给items了
+  // 因为新版的Menu无法让item得到父组件Menu的props，所以写一个函数，传入props，返回其绑定的item
+  const getItems = (project: Project) => {
+    const item: MenuProps['items'] = [
+      {
+        label: (
+          <ButtonNoPadding onClick={open} type={'link'}>
+            创建项目
+          </ButtonNoPadding>
+        ),
+        key: 'add'
+      },
+      {
+        label: '编辑',
+        onClick: editProject(project.id),
+        key: 'edit'
+      },
+      {
+        label: '删除',
+        // bug：先乐观更新了，但是请求没有成功
+        onClick: () => confirmDeleteProject(project.id),
+        key: 'delete'
+      }
+    ]
+    return item
+  }
+
+  return (
+    <Dropdown overlay={<Menu items={getItems(project)}></Menu>}>
+      <ButtonNoPadding type={'link'}>...</ButtonNoPadding>
+    </Dropdown>
   )
 }

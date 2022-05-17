@@ -2,8 +2,13 @@ import { useMemo } from 'react'
 import { useHttp } from './http'
 import { Project } from 'screens/project-list/list'
 import { useUrlQueryParam } from './url'
-import { useMutation, useQuery, useQueryClient } from 'react-query'
+import { QueryKey, useMutation, useQuery } from 'react-query'
 import { useSearchParams } from 'react-router-dom'
+import {
+  useAddConfig,
+  useDeleteConfig,
+  useEditConfig
+} from './use-optimistic-options'
 
 export const useProjects = (param?: Partial<Project>) => {
   // 使用useHttp，得到一个函数，用于替换之前的fetch操作，还可以自动携带token
@@ -99,36 +104,42 @@ export const useProjectsMoal = () => {
 // 这里不要在参数里写要传入，因为这个函数如果写了就是要被用到onCheckedChange内部，
 // 而hook是不能被当做普通函数的回调函数的
 // 所以需要的pin的参数，直接用异步请求获取，曲线救国
-export const useEditProject = () => {
+export const useEditProject = (queryKey: QueryKey) => {
   const client = useHttp()
-  const queryClient = useQueryClient()
+
+  // 返回一个对象，里面是一个函数  { mutate }
   return useMutation(
     (params: Partial<Project>) =>
       client(`projects/${params.id}`, {
         data: params,
         method: 'PATCH'
       }),
-    {
-      // 用于即时刷新，相对于retry
-      onSuccess: () => queryClient.invalidateQueries('projects')
-    }
+    useEditConfig(queryKey)
   )
 }
 
 // useAddProject
-export const useAddProject = () => {
+export const useAddProject = (queryKey: QueryKey) => {
   const client = useHttp()
-  const queryClient = useQueryClient()
   return useMutation(
     (params: Partial<Project>) =>
       client(`projects`, {
         data: params,
         method: 'POST'
       }),
-    {
-      // 用于即时刷新，相对于retry
-      onSuccess: () => queryClient.invalidateQueries('projects')
-    }
+    useAddConfig(queryKey)
+  )
+}
+
+// useDeleteProject
+export const useDeleteProject = (queryKey: QueryKey) => {
+  const client = useHttp()
+  return useMutation(
+    ({ id }: { id: number }) =>
+      client(`projects/${id}`, {
+        method: 'DELETE'
+      }),
+    useDeleteConfig(queryKey)
   )
 }
 
@@ -143,4 +154,9 @@ export const useProject = (id?: number) => {
       enabled: Boolean(id)
     }
   )
+}
+
+export const useProjectsQueryKey = () => {
+  const [params] = useProjectSearchParams()
+  return ['projects', params]
 }
