@@ -2,6 +2,7 @@ import { useDocumentTitle } from 'utils'
 import { useKanbansInProject, useProjectInUrl } from './util'
 import { KanbanColumn } from './kanban-column'
 import styled from '@emotion/styled'
+import { SearchPanel } from './search-panel'
 
 export default function KanbanScreen() {
   useDocumentTitle('看板列表')
@@ -10,9 +11,12 @@ export default function KanbanScreen() {
 
   const { data: kanbans } = useKanbansInProject()
 
+  // console.log(kanbans)
+
   return (
     <div>
       <h1>{currentProject?.name}看板</h1>
+      <SearchPanel />
       <ColumnContainer>
         {kanbans?.map((kanban) => (
           <KanbanColumn kanban={kanban} key={kanban.id} />

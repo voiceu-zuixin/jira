@@ -8,6 +8,7 @@ import {
   useDeleteConfig,
   useEditConfig
 } from './use-optimistic-options'
+import { cleanObject } from 'utils'
 
 export const useProjects = (param?: Partial<Project>) => {
   // 使用useHttp，得到一个函数，用于替换之前的fetch操作，还可以自动携带token
@@ -17,7 +18,7 @@ export const useProjects = (param?: Partial<Project>) => {
 
   // 第一个参数是数组的时候，当里面的依赖变化的时候，useQuery就会被触发
   return useQuery<Project[]>(['projects', param], () =>
-    client('projects', { data: param })
+    client('projects', { data: cleanObject(param || {}) })
   )
 }
 

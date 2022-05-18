@@ -8,6 +8,8 @@ import { Card } from 'antd'
 
 export function KanbanColumn({ kanban }: { kanban: Kanban }) {
   const { data: allTasks } = useTasksInProject()
+  // 未得到allTasks
+  // console.log('allTasks',allTasks)
 
   // 挑出只有该column的tasks
   const tasks = allTasks?.filter((task) => task.kanbanId === kanban.id)

@@ -1,5 +1,5 @@
 import { Form, Input } from 'antd'
-import UserSelect from 'components/user-select'
+import { UserSelect } from 'components/user-select'
 import { Project } from '../../types/project'
 import { User } from '../../types/user'
 

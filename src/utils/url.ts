@@ -48,7 +48,10 @@ export const useUrlQueryParam = <K extends string>(keys: K[]) => {
   ] as const //解决数组类型不一致的时候，ts推导类型会不易理解
 }
 
+// 返回一个函数，给该函数传入想要设置的url参数，就可以更新到url中
 export const useSetUrlSearchParam = () => {
+  // useSearchParams是react-router-dom自带的，可以读取url的数据，但是要指定方法才能拿到内部数据
+  // searchParams是当前url的数据，setSearchParams可以把参数更新到url中
   const [searchParams, setSearchParams] = useSearchParams()
 
   return (params: { [key in string]: unknown }) => {
