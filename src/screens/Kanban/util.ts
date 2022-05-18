@@ -1,9 +1,10 @@
 // 本util文件只在kanban文件夹下用
-import { useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
 import { useLocation } from 'react-router'
+import { useDebounce } from 'utils'
 import { useKanbans } from 'utils/kanban'
 import { useProject } from 'utils/project'
-import { useTasks } from 'utils/task'
+import { useTask, useTasks } from 'utils/task'
 import { useUrlQueryParam } from 'utils/url'
 
 // 通过正则取到url中的projectId
@@ -18,19 +19,24 @@ export const useProjectIdInUrl = () => {
 
 export const useProjectInUrl = () => useProject(useProjectIdInUrl())
 
-export const useKanbansSearchParams = () => ({ prjectId: useProjectIdInUrl() })
+export const useKanbansSearchParams = () => ({ projectId: useProjectIdInUrl() })
 
 export const useKanbansQueryKey = () => ['kanbans', useKanbansSearchParams()]
 
 // TasksSearchParams返回一个useMemo保存的对象，记录了TasksSearchParams参数
 export const useTasksSearchParams = () => {
   // useUrlQueryParam返回页面url中，指定参数的值，组合成一个对象
+  // eslint-disable-next-line
   const [param, setParam] = useUrlQueryParam([
     'name',
     'typeId',
     'processorId',
     'tagId'
   ])
+
+  // 内部debouncedName 的话，这样会有大问题
+  // const debouncedName = useDebounce(param.name, 200)
+  // console.log(debouncedName)
 
   // 通过正则取到url中的projectId
   const projectId = useProjectIdInUrl()
@@ -43,6 +49,7 @@ export const useTasksSearchParams = () => {
       tagId: Number(param.tagId) || undefined,
       processorId: Number(param.processorId) || undefined,
       name: param.name || undefined
+      // name: debouncedName
     }),
     [projectId, param]
   )
@@ -55,3 +62,30 @@ export const useKanbansInProject = () =>
 
 // 函数，调用该函数可以得到useQuery()后的结果对象，具有data，refetch等属性
 export const useTasksInProject = () => useTasks(useTasksSearchParams()) //返回一个useQuery()后的结果对象，具有data，refetch等属性
+
+export const useTasksModal = () => {
+  const [{ editingTaskId }, setEditingTaskId] = useUrlQueryParam([
+    'editingTaskId'
+  ])
+
+  const { data: editingTask, isLoading } = useTask(Number(editingTaskId))
+
+  const startEdit = useCallback(
+    (id: number) => {
+      setEditingTaskId({ editingTaskId: id })
+    },
+    [setEditingTaskId]
+  )
+
+  const close = useCallback(() => {
+    setEditingTaskId({ editingTaskId: '' })
+  }, [setEditingTaskId])
+
+  return {
+    editingTaskId,
+    editingTask,
+    startEdit,
+    close,
+    isLoading
+  }
+}

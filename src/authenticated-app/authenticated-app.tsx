@@ -105,6 +105,7 @@ const HeaderLeft = styled(Row)``
 const HeaderRight = styled.div``
 
 const Main = styled.main`
+  /* 会导致外面也变样 */
   display: flex;
   overflow: hidden;
 `

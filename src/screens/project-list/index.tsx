@@ -1,14 +1,13 @@
 import { List } from './list'
 import { SearchPanel } from './search-panel'
 import { useDebounce, useDocumentTitle } from 'utils'
-import styled from '@emotion/styled'
 import {
   useProjects,
   useProjectSearchParams,
   useProjectsMoal
 } from 'utils/project'
 import { useUser } from 'utils/user'
-import { ButtonNoPadding, ErrorBox, Row } from 'components/lib'
+import { ButtonNoPadding, ErrorBox, Row, ScreenContainer } from 'components/lib'
 
 // 引入apiUrl
 // const apiUrl = process.env.REACT_APP_API_URL
@@ -33,7 +32,7 @@ export const ProjectListScreen = () => {
   const { data: users } = useUser()
 
   return (
-    <Container>
+    <ScreenContainer>
       <Row between={true}>
         <h1>项目列表</h1>
 
@@ -54,13 +53,9 @@ export const ProjectListScreen = () => {
         users={users || []}
         dataSource={list || []}
       />
-    </Container>
+    </ScreenContainer>
   )
 }
 
 // 追踪ProjectListScreen组件，为什么渲染
 ProjectListScreen.whyDidYouRender = false
-
-const Container = styled.div`
-  padding: 3.2rem;
-`
