@@ -11,7 +11,7 @@ import { BrowserRouter as Router } from 'react-router-dom'
 react-router 和 react-router-dom 的关系类似于 react 和 react-dom /react-native
 react是核心，react-dom主要把逻辑应用到浏览器上，react-native主要把逻辑应用到ios/Android
 */
-import ProjectScreen from 'screens/project'
+import { ProjectScreen } from 'screens/project'
 import { resetRoute } from 'utils'
 import ProjectModal from 'screens/project-list/project-modal'
 import ProjectPopover from 'screens/project-list/project-popover'
@@ -104,4 +104,7 @@ const HeaderLeft = styled(Row)``
 
 const HeaderRight = styled.div``
 
-const Main = styled.main``
+const Main = styled.main`
+  display: flex;
+  overflow: hidden;
+`

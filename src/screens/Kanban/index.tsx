@@ -3,6 +3,7 @@ import { useKanbansInProject, useProjectInUrl } from './util'
 import { KanbanColumn } from './kanban-column'
 import styled from '@emotion/styled'
 import { SearchPanel } from './search-panel'
+import { ScreenContainer } from 'components/lib'
 
 export default function KanbanScreen() {
   useDocumentTitle('看板列表')
@@ -11,10 +12,8 @@ export default function KanbanScreen() {
 
   const { data: kanbans } = useKanbansInProject()
 
-  // console.log(kanbans)
-
   return (
-    <div>
+    <ScreenContainer>
       <h1>{currentProject?.name}看板</h1>
       <SearchPanel />
       <ColumnContainer>
@@ -22,12 +21,14 @@ export default function KanbanScreen() {
           <KanbanColumn kanban={kanban} key={kanban.id} />
         ))}
       </ColumnContainer>
-    </div>
+    </ScreenContainer>
   )
 }
 
 const ColumnContainer = styled.div`
   display: flex;
-  overflow: hidden;
-  margin-right: 2rem;
+  /* 看板宽度不变，内容多了就开始滚动 */
+  overflow-x: scroll;
+  flex: 1;
+  /* margin-right: 2rem; */
 `

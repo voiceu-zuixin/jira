@@ -130,6 +130,7 @@ const More = ({ project }: { project: Project }) => {
   // antd4.20.0开始已经舍弃了Menu之前的写法，现在要写items,具体看https://ant.design/components/menu-cn/
   // 但是这样就无法把外部Menu的参数传给items了
   // 因为新版的Menu无法让item得到父组件Menu的props，所以写一个函数，传入props，返回其绑定的item
+  // 需要用useMemo吗
   const getItems = (project: Project) => {
     const item: MenuProps['items'] = [
       {
