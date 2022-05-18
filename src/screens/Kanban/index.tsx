@@ -20,7 +20,13 @@ export default function KanbanScreen() {
 
   const { data: kanbans, isLoading: kanbanIsLoading } = useKanbansInProject()
 
-  const { isLoading: taskIsLoading } = useTasks(useTasksSearchParams())
+  // 防抖，要在两处进行防抖，只要在外部用到了useTasks的，这里是一处，另一处是KanbanColumn
+  const param = useTasksSearchParams()
+  const debouncedallparam = useDebounce(param, 200)
+
+  // useTasks内部的useQuery会等待debounce的异步完成后再去请求，useProjects同理
+  const { isLoading: taskIsLoading } = useTasks(debouncedallparam)
+  // const { isLoading: taskIsLoading } = useTasks(useTasksSearchParams())
 
   const isLoading = taskIsLoading || kanbanIsLoading
 

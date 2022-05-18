@@ -1,6 +1,6 @@
 import { Kanban } from 'types/kanban'
 import { useTaskTypes } from 'utils/task-type'
-import { useTasksInProject, useTasksModal, useTasksSearchParams } from './util'
+import { useTasksModal, useTasksSearchParams } from './util'
 import taskIcon from 'assets/task.svg'
 import bugIcon from 'assets/bug.svg'
 import styled from '@emotion/styled'
@@ -10,23 +10,13 @@ import { useDebounce } from 'utils'
 import { useTasks } from 'utils/task'
 
 export function KanbanColumn({ kanban }: { kanban: Kanban }) {
+  // 防抖，要在两处进行防抖，只要在外部用到了useTasks的，这里是一处，另一处是kanban/index
   const param = useTasksSearchParams()
-  // console.log(param)
-
-  // 防抖
   const debouncedallparam = useDebounce(param, 200)
-  // console.log(useDebounce(param, 2000))
-
   const { data: debouncedallTasks } = useTasks(debouncedallparam)
 
-  // console.log(debouncedallTasks)
-
-  const { data: allTasks } = useTasksInProject()
-  // console.log(allTasks)
-
   // 挑出只有该column的tasks
-  // const tasks = debouncedallTasks?.filter((task) => task.kanbanId === kanban.id)
-  const tasks = allTasks?.filter((task) => task.kanbanId === kanban.id)
+  const tasks = debouncedallTasks?.filter((task) => task.kanbanId === kanban.id)
 
   const { startEdit } = useTasksModal()
 

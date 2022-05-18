@@ -1,7 +1,6 @@
 // 本util文件只在kanban文件夹下用
 import { useCallback, useMemo } from 'react'
 import { useLocation } from 'react-router'
-import { useDebounce } from 'utils'
 import { useKanbans } from 'utils/kanban'
 import { useProject } from 'utils/project'
 import { useTask, useTasks } from 'utils/task'
@@ -36,7 +35,6 @@ export const useTasksSearchParams = () => {
 
   // 内部debouncedName 的话，这样会有大问题
   // const debouncedName = useDebounce(param.name, 200)
-  // console.log(debouncedName)
 
   // 通过正则取到url中的projectId
   const projectId = useProjectIdInUrl()
