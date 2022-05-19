@@ -1,3 +1,4 @@
+import React from 'react'
 import { Kanban } from 'types/kanban'
 import { useTaskTypes } from 'utils/task-type'
 import { useKanbansQueryKey, useTasksModal, useTasksSearchParams } from './util'
@@ -13,7 +14,10 @@ import { Mark } from 'components/mark'
 import { useDeleteKanban } from 'utils/kanban'
 import { Row } from 'components/lib'
 
-export function KanbanColumn({ kanban }: { kanban: Kanban }) {
+export const KanbanColumn = React.forwardRef<
+  HTMLDivElement,
+  { kanban: Kanban }
+>(({ kanban, ...props }, ref) => {
   // 防抖，要在两处进行防抖，只要在外部用到了useTasks的，这里是一处，另一处是kanban/index
   const param = useTasksSearchParams()
   const debouncedallparam = useDebounce(param, 200)
@@ -23,20 +27,20 @@ export function KanbanColumn({ kanban }: { kanban: Kanban }) {
   const tasks = debouncedallTasks?.filter((task) => task.kanbanId === kanban.id)
 
   return (
-    <Container>
+    <Container {...props} ref={ref}>
       <Row between={true}>
         <h3>{kanban.name}</h3>
-        <More kanban={kanban} />
+        <More kanban={kanban} key={kanban.id} />
       </Row>
       <TasksContainer>
         {tasks?.map((task) => (
-          <TaskCard task={task} />
+          <TaskCard task={task} key={task.id} />
         ))}
         <CreateTask kanbanId={kanban.id} />
       </TasksContainer>
     </Container>
   )
-}
+})
 
 // 抽离TaskCard
 export const TaskCard = ({ task }: { task: Task }) => {

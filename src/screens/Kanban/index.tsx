@@ -12,6 +12,8 @@ import { useTasks } from 'utils/task'
 import { Spin } from 'antd'
 import { CreateKanban } from './create-kanban'
 import { TaskModal } from './task-modal'
+import { DragDropContext } from 'react-beautiful-dnd'
+import { Drag, Drop, DropChild } from 'components/drag-and-drop'
 
 export default function KanbanScreen() {
   useDocumentTitle('看板列表')
@@ -31,25 +33,48 @@ export default function KanbanScreen() {
   const isLoading = taskIsLoading || kanbanIsLoading
 
   return (
-    <ScreenContainer>
-      <h1>{currentProject?.name}看板</h1>
-      <SearchPanel />
-      {isLoading ? (
-        <Spin size={'large'} />
-      ) : (
-        <ColumnContainer>
-          {kanbans?.map((kanban) => (
-            <KanbanColumn kanban={kanban} key={kanban.id} />
-          ))}
-          <CreateKanban />
-        </ColumnContainer>
-      )}
-      <TaskModal />
-    </ScreenContainer>
+    <DragDropContext
+      onDragEnd={
+        // 做持续化的工作
+        () => {}
+      }
+    >
+      <ScreenContainer>
+        <h1>{currentProject?.name}看板</h1>
+        <SearchPanel />
+        {isLoading ? (
+          <Spin size={'large'} />
+        ) : (
+          <ColumnContainer>
+            {/*  放置 */}
+            <Drop
+              type={'COLUMN'}
+              direction={'horizontal'}
+              droppableId={'kanban'}
+            >
+              <DropChild style={{ display: 'flex' }}>
+                {kanbans?.map((kanban, index) => (
+                  // 拖拽
+                  <Drag
+                    key={kanban.id}
+                    draggableId={'kanban' + kanban.id}
+                    index={index}
+                  >
+                    <KanbanColumn kanban={kanban} key={kanban.id} />
+                  </Drag>
+                ))}
+              </DropChild>
+            </Drop>
+            <CreateKanban />
+          </ColumnContainer>
+        )}
+        <TaskModal />
+      </ScreenContainer>
+    </DragDropContext>
   )
 }
 
-const ColumnContainer = styled.div`
+const ColumnContainer = styled('div')`
   display: flex;
   /* 看板宽度不变，内容多了就开始滚动 */
   overflow-x: scroll;

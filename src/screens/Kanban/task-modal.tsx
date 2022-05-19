@@ -38,6 +38,8 @@ export const TaskModal = () => {
       cancelText: '取消',
       title: '确定删除任务吗',
       onOk() {
+        // 关闭Modal
+        close()
         return deleteTask({ id: Number(editingTaskId) })
       }
     })
