@@ -1,13 +1,17 @@
 import { Kanban } from 'types/kanban'
 import { useTaskTypes } from 'utils/task-type'
-import { useTasksModal, useTasksSearchParams } from './util'
+import { useKanbansQueryKey, useTasksModal, useTasksSearchParams } from './util'
 import taskIcon from 'assets/task.svg'
 import bugIcon from 'assets/bug.svg'
 import styled from '@emotion/styled'
-import { Card } from 'antd'
+import { Button, Card, Dropdown, Menu, MenuProps, Modal } from 'antd'
 import { CreateTask } from './create-task'
 import { useDebounce } from 'utils'
 import { useTasks } from 'utils/task'
+import { Task } from 'types/task'
+import { Mark } from 'components/mark'
+import { useDeleteKanban } from 'utils/kanban'
+import { Row } from 'components/lib'
 
 export function KanbanColumn({ kanban }: { kanban: Kanban }) {
   // 防抖，要在两处进行防抖，只要在外部用到了useTasks的，这里是一处，另一处是kanban/index
@@ -18,25 +22,75 @@ export function KanbanColumn({ kanban }: { kanban: Kanban }) {
   // 挑出只有该column的tasks
   const tasks = debouncedallTasks?.filter((task) => task.kanbanId === kanban.id)
 
-  const { startEdit } = useTasksModal()
-
   return (
     <Container>
-      <h3>{kanban.name}</h3>
+      <Row between={true}>
+        <h3>{kanban.name}</h3>
+        <More kanban={kanban} />
+      </Row>
       <TasksContainer>
         {tasks?.map((task) => (
-          <Card
-            onClick={() => startEdit(task.id)}
-            style={{ marginBottom: '0.5rem', cursor: 'pointer' }}
-            key={task.id}
-          >
-            <div>{task.name}</div>
-            <TaskTypeIcon id={task.typeId} />
-          </Card>
+          <TaskCard task={task} />
         ))}
         <CreateTask kanbanId={kanban.id} />
       </TasksContainer>
     </Container>
+  )
+}
+
+// 抽离TaskCard
+export const TaskCard = ({ task }: { task: Task }) => {
+  const { startEdit } = useTasksModal()
+
+  // 取出name当做keyword
+  const { name: keyword } = useTasksSearchParams()
+
+  return (
+    <Card
+      onClick={() => startEdit(task.id)}
+      style={{ marginBottom: '0.5rem', cursor: 'pointer' }}
+      key={task.id}
+    >
+      <p>
+        <Mark keyword={keyword} name={task.name} />
+      </p>
+      <TaskTypeIcon id={task.typeId} />
+    </Card>
+  )
+}
+
+// 删除看板等功能
+const More = ({ kanban }: { kanban: Kanban }) => {
+  const { mutateAsync } = useDeleteKanban(useKanbansQueryKey())
+
+  const startDelete = () => {
+    Modal.confirm({
+      okText: '确定',
+      cancelText: '取消',
+      title: '确定删除看板吗',
+      onOk() {
+        return mutateAsync({ id: kanban.id })
+      }
+    })
+  }
+
+  const items: MenuProps['items'] = [
+    {
+      label: (
+        <Button onClick={startDelete} type={'link'}>
+          删除
+        </Button>
+      ),
+      key: 'add'
+    }
+  ]
+
+  const overlay = <Menu items={items} />
+
+  return (
+    <Dropdown overlay={overlay}>
+      <Button type={'link'}>...</Button>
+    </Dropdown>
   )
 }
 
