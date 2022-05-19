@@ -1,4 +1,6 @@
 import { QueryKey, useQueryClient } from 'react-query'
+import { Task } from 'types/task'
+import { reorder } from './reorder'
 
 export const useConfig = (
   queryKey: QueryKey,
@@ -24,7 +26,7 @@ export const useConfig = (
 
       return { previousItems }
     },
-    
+
     // 当useMutation的请求发生错误的时候，就调用该函数
     // 逻辑上是useMutation一发生，会先调用onMutate，这个时候乐观更新，但是当响应返回来的时候发现请求失败了
     // 就应该把乐观更新提前响应的内容清空，回滚到之前的状态，此时就调用onError
@@ -55,3 +57,21 @@ export const useEditConfig = (queryKey: QueryKey) =>
 // useAddConfig
 export const useAddConfig = (queryKey: QueryKey) =>
   useConfig(queryKey, (target, old) => (old ? [...old, target] : []))
+
+export const useReorderConfig = (queryKey: QueryKey) =>
+  useConfig(queryKey, (targer, old) => old || [])
+
+// 排序乐观更新
+export const useReorderKanbanConfig = (queryKey: QueryKey) =>
+  useConfig(queryKey, (target, old) => reorder({ list: old, ...target }))
+
+// 排序乐观更新
+export const useReorderTaskConfig = (queryKey: QueryKey) =>
+  useConfig(queryKey, (target, old) => {
+    const orderedList = reorder({ list: old, ...target }) as Task[]
+    return orderedList.map((item) =>
+      item.id === target.fromId
+        ? { ...item, kanbanId: target.toKanbanId }
+        : item
+    )
+  })

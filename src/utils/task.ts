@@ -5,8 +5,10 @@ import { cleanObject } from 'utils'
 import {
   useAddConfig,
   useDeleteConfig,
-  useEditConfig
+  useEditConfig,
+  useReorderTaskConfig
 } from './use-optimistic-options'
+import { SortProps } from './kanban'
 
 // task的react-query缓存，以及请求等数据
 export const useTasks = (param?: Partial<Task>) => {
@@ -71,4 +73,16 @@ export const useDeleteTask = (queryKey: QueryKey) => {
       }),
     useDeleteConfig(queryKey)
   )
+}
+
+// 拖拽后重排序
+export const useReorderTask = (queryKey: QueryKey) => {
+  const client = useHttp()
+
+  return useMutation((params: SortProps) => {
+    return client('tasks/reorder', {
+      data: params,
+      method: 'POST'
+    })
+  }, useReorderTaskConfig(queryKey))
 }

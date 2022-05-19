@@ -13,6 +13,7 @@ import { Task } from 'types/task'
 import { Mark } from 'components/mark'
 import { useDeleteKanban } from 'utils/kanban'
 import { Row } from 'components/lib'
+import { Drag, Drop, DropChild } from 'components/drag-and-drop'
 
 export const KanbanColumn = React.forwardRef<
   HTMLDivElement,
@@ -33,9 +34,27 @@ export const KanbanColumn = React.forwardRef<
         <More kanban={kanban} key={kanban.id} />
       </Row>
       <TasksContainer>
-        {tasks?.map((task) => (
-          <TaskCard task={task} key={task.id} />
-        ))}
+        <Drop
+          type={'ROW'}
+          direction={'vertical'}
+          droppableId={String(kanban.id)}
+        >
+          {/* 防止没有task的时候，高度没了，再拖回来就放不进去了 */}
+          <DropChild style={{ minHeight: '5px' }}>
+            {tasks?.map((task, taskIndex) => (
+              <Drag
+                key={task.id}
+                index={taskIndex}
+                draggableId={'task' + task.id}
+              >
+                {/* div可以自带ref，就不用再去接口处定义ref了 */}
+                <div>
+                  <TaskCard task={task} key={task.id} />
+                </div>
+              </Drag>
+            ))}
+          </DropChild>
+        </Drop>
         <CreateTask kanbanId={kanban.id} />
       </TasksContainer>
     </Container>
