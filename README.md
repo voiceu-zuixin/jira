@@ -193,3 +193,5 @@ useCallback 返回一个 memoized 回调函数。useCallback(fn, deps) 相当于
 更新新版本的 React-dev-tool，StrictMode 中第二次重复渲染的 console 会变成灰色，这样便于检测
 
 ### 解决了看板及任务页面的 search-pancel 的搜索防抖问题，视频教程是错误的
+
+防抖，要在两处进行防抖，只要在外部用到了 useTasks 的，kanban-column 这里是一处，另一处是 kanban/index
